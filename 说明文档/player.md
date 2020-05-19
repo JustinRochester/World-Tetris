@@ -50,28 +50,82 @@ finished:属性
 
 ```cpp
 int count;
-bool map[10][25];
+bool map[10][30];
 string name;
 bool finished
 ```
 
 ```cpp
-addOrder();
-finished =bool run(direction,int &count){
-    if(finished) return 1;
-    if( touchLimit(direction) )//touch left or right
+direction:
+up:0
+left:1
+right:2
+down:3
+spin:4
+bool Alw(direction){
+    if(direcion==spin){
+        squre.spin();
+        if( !isOverlap() )
+            return 1;
+        squre.spin();
+        squre.spin();
+        squre.spin();
         return 0;
-    squre.move(direction)
+    }
+    if(direction==left||direction==right){
+        squre.move(direction);
+        for(;;){
+            squre.move(direcion^3);
+            return 0;
+        }
+        if( !isOverlap() )
+            return 1;
+        squre.move(direcion^3);
+        return 0;
+    }
+    if(direction==down){
+        while(squre.move(direction),!isOverlap());
+        squre.move(direction^3);
+        return 1;
+    }
+}
+bool touchBottom(){
+    squre.move(down)；
+    for(;;){
+        squre.move(up);
+        return 0;
+    }
+    if( isOverlap() ){
+        squre.move(up);
+        return 0;
+    }
+    return 1;
+}
+void run(direction,int &count){
+    if(finished) return ;
+    if( !Alw(direction) )//touch left or right
+        return ;
     if( touchBottom() ){
         addToMap();
+        count=delLine( squre.getInformation() );//update map
+
         squre=nextsqure;
+        sqrue.setxy(x,y);
         nextsqure.update();
+
+        touchCeiling();
     }
-    count=delLine();//update map
     return 0;
 }
-display()//return map,squre,nextsqure
+friend display()//return map,squre,nextsqure
 addLine(count)//单人模式不调用
+    addline
+    if( isOverlap() )
+        while( isOverlap() )
+            squre.upmove();
+        squre.downmove();
+        addToMap();
+    touchCeiling();
 finished =bool touchCeiling(){//游戏结束
     return 1;
 }
