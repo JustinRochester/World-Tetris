@@ -1,5 +1,6 @@
 #include "Brick.h"
 
+
 void Brick::brickUpdate() {
 	BrickColor = (rand() % TotalColorType) + 1;
 	BrickType = (rand() % TotalBrickType) + 1;
@@ -218,22 +219,22 @@ void Brick::rotateBrick() {
 
 void Brick::Operation(int _Order) {
 	switch(_Order) {
-		case Up:
+		case Brick::Up:
 			shiftUp();
 			break;
-		case Down:
+		case Brick::Down:
 			shiftDown();
 			break;
-		case Left:
+		case Brick::Left:
 			shiftLeft();
 			break;
-		case Right:
+		case Brick::Right:
 			shiftRight();
 			break;
-		case Rotate:
+		case Brick::Rotate:
 			rotateBrick();
 			break;
-		case Update:
+		case Brick::Update:
 			brickUpdate();
 			break;
 	}
