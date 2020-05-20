@@ -12,17 +12,18 @@ private:
 	std::string Name;
 	Brick NowBrick, NextBrick;
 
-	bool isOverlap();//L
-	bool carryCommand(int Direction);//L
-	bool touchBottom();//L
-	bool touchCeiling();//C
-	void addToMap();//C
-	int delLine();//L
+	bool isOverlap();
+	bool carryCommand(int Direction);
+	bool touchBottom();
+	bool touchCeiling();
+	void addToMap();
+	int delLine();
+	int renewBrick();
 
 public:
-	Player(bool StartGame=0);//Finished
-	void setName(const std::string& Name_);//Finished
-	void run(int Direction,int &CountRemoveLine);
-	void addLine(int CountLine);//C
+	Player(bool StartGame=0);
+	void setName(const std::string& Name_);
+	int run(int Direction);
+	int addLine(int CountLine);
 };
 #endif

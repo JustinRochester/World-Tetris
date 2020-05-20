@@ -1,4 +1,5 @@
 #include"Player.h"
+#include<ctime>
 
 int Player::UP_LIM = 30;
 int Player::DOWN_LIM = 1;
@@ -49,23 +50,30 @@ bool Player::carryCommand(int Direction) {
 	This method is used to carry the command which is given by the player.
 	And it will return that whether it carried successfully or not.
 	*/
-	NowBrick.Operation(Direction);
+	if (Direction == 0) {
+		/*
+		The Command is given by the system that the working birck should fall by one line.
+		*/
+		NowBrick.Operation(Brick::Down);
+		return true;
+	}
 	if (Direction == Brick::Down) {
 		/*
 		The Command that this player given is down to the bottom.
 		*/
+		NowBrick.Operation(Brick::Down);
 		while (!isOverlap())
 			NowBrick.Operation(Brick::Down);
 		NowBrick.Operation(Brick::Up);
 		return true;
 	}
 	if (Direction == Brick::Rotate) {
-		NowBrick.Operation(Brick::Right);
+		NowBrick.Operation(Brick::Rotate);
 		if (!isOverlap())
 			return true;
-		NowBrick.Operation(Brick::Right);
-		NowBrick.Operation(Brick::Right);
-		NowBrick.Operation(Brick::Right);
+		NowBrick.Operation(Brick::Rotate);
+		NowBrick.Operation(Brick::Rotate);
+		NowBrick.Operation(Brick::Rotate);
 		return false;
 	}
 	if (Direction == Brick::Left || Direction == Brick::Right) {
@@ -89,6 +97,27 @@ bool Player::touchBottom() {
 	NowBrick.Operation(Brick::Up);
 	return TouchBottom;
 }
+bool Player::touchCeiling() {
+	/*
+	In this code, we considered that the first 20 lines consists of the map.
+	Therefore, it means that the game is over if there is any brick appeared out of them.
+	*/
+	for (int i = 21; i <= UP_LIM; i++) 
+		for(int j=LEFT_LIM;j<=RIGHT_LIM;j++)
+			if (MapSqure[i][j])
+				return true;
+		
+	return false;
+}
+void Player::addToMap() {
+	/*
+	This method is used to add the working brick into the map, which is touches the bottom.
+	*/
+	int* Tmp = NowBrick.getInformation();
+	for (int i = 1; i <= 9; i += 2)
+		MapSqure[Tmp[i]][Tmp[i + 1]] = 1;
+	return;
+}
 int Player::delLine() {
 	/*
 	This method is used after the working birck touches the bottom.
@@ -106,7 +135,7 @@ int Player::delLine() {
 	/*
 	Get the lines that the working brick in. And sort them from the minimum to the maximum.
 	*/
-	int CountLines = 0;
+	int CountDeleteLine = 0;
 	for (int i = 0; i < 4; i++) {
 		if (i > 0 && Lines[i] == Lines[i - 1])
 			continue;
@@ -120,7 +149,7 @@ int Player::delLine() {
 		Check that whether the line is full or not.
 		*/
 
-		CountLines++;
+		CountDeleteLine++;
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 			MapSqure[Line][j] = 0;
 		/*
@@ -139,5 +168,81 @@ int Player::delLine() {
 		}
 	}
 
-	return CountLines;
+	CountScore += CountDeleteLine * (CountDeleteLine + 1) / 2;
+
+	return CountDeleteLine;
+}
+int Player::renewBrick() {
+	/*
+	This method is used while the working brick touches the bottom.
+	And this method is used to renew the working brick.
+	Because the renewing will change the state of the brick which is working now,
+	it will return the number of line(s) which is deleted, too.
+	*/
+	addToMap();
+	int countDeleteLine = delLine();
+	NowBrick = NextBrick;
+	NowBrick.brickSet(24, LEFT_LIM + RIGHT_LIM >> 1);
+	NextBrick.Operation(Brick::Update);
+	return countDeleteLine;
+}
+int Player::addLine(int CountLine) {
+	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 1, Seed = time(NULL) % Bas;
+	for (int i = UP_LIM - CountLine; i >= DOWN_LIM; i--)
+		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
+			MapSqure[i + CountLine][j] = MapSqure[i][j];
+	/*
+	Move all of the map up.
+	*/
+	for (int i = DOWN_LIM, j = 1; j <= CountLine; i++, j++) {
+		int State = Seed;
+		Seed = (Seed ^ 993410) * 19491001 + 19260817;
+		Seed = (Seed % Bas + Bas) % Bas;
+		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++, State >>= 1)
+			MapSqure[i][j] = (State & 1);
+	}
+	/*
+	Built the first CounLine lines randomly.
+	*/
+	int CountDeleteLine = 0;
+	if (isOverlap()) {
+		while (isOverlap())
+			NowBrick.Operation(Brick::Up);
+		NowBrick.Operation(Brick::Down);
+	}
+	if (touchBottom()) {
+		addToMap();
+		CountDeleteLine = renewBrick();
+	}
+	/*
+	Move the working brick up if it overlaps the map.
+	And check out whether it is touches the bottom.
+	*/
+	if (touchCeiling()) {
+		GameOver = 1;
+		return 0;
+	}
+	return CountDeleteLine;
+}
+int Player::run(int Direction) {
+	if (GameOver)
+		return 0;
+	/*
+	The method would not work if the game of this player is over.
+	*/
+	if (!carryCommand(Direction))
+		return 0;
+	/*
+	The invalid carring means that there is nothing changed in the map.
+	*/
+	int CountDeleteLine = 0;
+	if (touchBottom()) {
+		addToMap();
+		CountDeleteLine = renewBrick();
+	}
+	if (touchCeiling()) {
+		GameOver = 1;
+		return 0;
+	}
+	return CountDeleteLine;
 }
