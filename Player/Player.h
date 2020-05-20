@@ -5,10 +5,9 @@
 #define _PLAYER
 class Player {
 private:
-	static int UP, DOWN, LEFT, RIGHT, SPIN, UPDATE;
 	static int UP_LIM, DOWN_LIM, LEFT_LIM, RIGHT_LIM;
 	int CountScore;
-	bool MapSqure[30][10];
+	bool MapSqure[31][11];
 	bool GameOver;
 	std::string Name;
 	Brick NowBrick, NextBrick;
