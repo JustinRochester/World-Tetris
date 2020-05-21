@@ -111,7 +111,7 @@ bool Player::touchCeiling() {
 }
 void Player::addToMap() {
 	/*
-	This method is used to add the working brick into the map, which is touches the bottom.
+	This method is used to add the working brick into the map, which touches the bottom.
 	*/
 	int* Tmp = NowBrick.getInformation();
 	for (int i = 1; i <= 9; i += 2)
