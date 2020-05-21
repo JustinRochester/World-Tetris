@@ -15,12 +15,17 @@ Player::Player(bool StartGame) {
 	for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 		MapSqure[DOWN_LIM - 1][j] = MapSqure[UP_LIM + 1][j] = 1;
 	GameOver = !StartGame;
+	if (GameOver) return;
 	/*
 	Surely, the game serve won't start if this player didn't start the game.
 	*/
+	NowBrick.Operation(Brick::Update);
+	NowBrick.brickSet(24, LEFT_LIM + RIGHT_LIM >> 1);
+	NextBrick.Operation(Brick::Update);
 }
 void Player::setName(const std::string& Name_) {
 	Name = Name_;
+	return;
 }
 bool Player::isOverlap(){
 	/*
@@ -179,7 +184,6 @@ int Player::renewBrick() {
 	Because the renewing will change the state of the brick which is working now,
 	it will return the number of line(s) which is deleted, too.
 	*/
-	addToMap();
 	int countDeleteLine = delLine();
 	NowBrick = NextBrick;
 	NowBrick.brickSet(24, LEFT_LIM + RIGHT_LIM >> 1);
@@ -187,6 +191,8 @@ int Player::renewBrick() {
 	return countDeleteLine;
 }
 int Player::addLine(int CountLine) {
+	if (GameOver)
+		return 0;
 	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 1, Seed = time(NULL) % Bas;
 	for (int i = UP_LIM - CountLine; i >= DOWN_LIM; i--)
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)

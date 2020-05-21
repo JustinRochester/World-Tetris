@@ -1,11 +1,12 @@
 #include"Player.h"
 #include<iostream>
+#include<string>
 using namespace std;
 
+Player p1;
 int main() {
 	string s;
 	cin >> s;
-	Player p1;
 	p1.setName(s);
 	return 0;
 }

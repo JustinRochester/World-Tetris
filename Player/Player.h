@@ -7,7 +7,7 @@ class Player {
 private:
 	static int UP_LIM, DOWN_LIM, LEFT_LIM, RIGHT_LIM;
 	int CountScore;
-	bool MapSqure[31][11];
+	bool MapSqure[32][12];
 	bool GameOver;
 	std::string Name;
 	Brick NowBrick, NextBrick;
@@ -19,6 +19,9 @@ private:
 	void addToMap();
 	int delLine();
 	int renewBrick();
+#ifdef DEBUG
+	void display();
+#endif
 
 public:
 	Player(bool StartGame=0);
