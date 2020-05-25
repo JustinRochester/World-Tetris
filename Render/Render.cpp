@@ -3,6 +3,19 @@
 #include<windows.h>
 #include<conio.h>
 using namespace std;
+
+class Render
+{
+private:
+	int type;				//模式 
+	int score; 
+public:
+	void Welcome();			//首界面
+	void SetColor(int);		//控制颜色
+	void DrawMap1();			//游戏界面
+	void DrawMap2(); 
+};
+
 void SetPos(int i, int j)			//控制光标位置， 列， 行
 {
 	COORD pos={i,j};
@@ -175,4 +188,4 @@ void Render::DrawMap2()				//双人画游戏时界面
 	cout << "分数: " << score; 
 	SetPos(88, 5);
 	cout << "下一图形:";
-  }
+} 
