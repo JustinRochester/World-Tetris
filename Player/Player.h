@@ -20,7 +20,7 @@ private:
 	int delLine();
 	int renewBrick();
 #ifdef DEBUG
-	void display();
+	friend void display(Player &p);
 #endif
 
 public:

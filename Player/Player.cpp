@@ -1,26 +1,26 @@
 #include"Player.h"
 #include<ctime>
 
-int Player::UP_LIM = 30;
-int Player::DOWN_LIM = 1;
+int Player::UP_LIM = 1;
+int Player::DOWN_LIM = 30;
 int Player::RIGHT_LIM = 10;
 int Player::LEFT_LIM = 1;
 Player::Player(bool StartGame) {
 	CountScore = 0;
-	for (int i = DOWN_LIM; i <= UP_LIM; i++)
+	for (int i = UP_LIM; i <= DOWN_LIM; i++)
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 			MapSqure[i][j] = 0;
-	for (int i = DOWN_LIM; i <= UP_LIM; i++)
+	for (int i = UP_LIM; i <= DOWN_LIM; i++)
 		MapSqure[i][LEFT_LIM - 1] = MapSqure[i][RIGHT_LIM + 1] = 1;
 	for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
-		MapSqure[DOWN_LIM - 1][j] = MapSqure[UP_LIM + 1][j] = 1;
+		MapSqure[UP_LIM - 1][j] = MapSqure[DOWN_LIM + 1][j] = 1;
 	GameOver = !StartGame;
 	if (GameOver) return;
 	/*
 	Surely, the game serve won't start if this player didn't start the game.
 	*/
 	NowBrick.Operation(Brick::Update);
-	NowBrick.brickSet(24, LEFT_LIM + RIGHT_LIM >> 1);
+	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
 }
 void Player::setName(const std::string& Name_) {
@@ -31,11 +31,10 @@ bool Player::isOverlap(){
 	/*
 	This method is used to check whether the working brick is overlapping the map.
 	*/
-	int* Tmp;
-	Tmp = NowBrick.getInformation();
+	const int* Tmp = NowBrick.getInformation();
 
 	for (int i = 1; i < 9; i+=2)
-		if (Tmp[i]<DOWN_LIM || Tmp[i]>UP_LIM)
+		if (Tmp[i]<UP_LIM || Tmp[i]>DOWN_LIM)
 			return true;
 	for (int i = 2; i < 9; i+=2)
 		if (Tmp[i]<LEFT_LIM || Tmp[i]>RIGHT_LIM)
@@ -107,7 +106,7 @@ bool Player::touchCeiling() {
 	In this code, we considered that the first 20 lines consists of the map.
 	Therefore, it means that the game is over if there is any brick appeared out of them.
 	*/
-	for (int i = 21; i <= UP_LIM; i++) 
+	for (int i = UP_LIM; i <= 10; i++) 
 		for(int j=LEFT_LIM;j<=RIGHT_LIM;j++)
 			if (MapSqure[i][j])
 				return true;
@@ -118,9 +117,9 @@ void Player::addToMap() {
 	/*
 	This method is used to add the working brick into the map, which touches the bottom.
 	*/
-	int* Tmp = NowBrick.getInformation();
-	for (int i = 1; i <= 9; i += 2)
-		MapSqure[Tmp[i]][Tmp[i + 1]] = 1;
+	const int* Information = NowBrick.getInformation();
+	for (int i = 1; i < 9; i += 2)
+		MapSqure[Information[i]][Information[i + 1]] = 1;
 	return;
 }
 int Player::delLine() {
@@ -129,10 +128,10 @@ int Player::delLine() {
 	And it will work to delete the full line.
 	After that, it will return the number of the line(s) it deleted.
 	*/
-	int* Tmp = NowBrick.getInformation();
+	const int* Information = NowBrick.getInformation();
 	int Lines[4] = { 0 };
 	for (int i = 1,j=0; i < 9; i+=2,j++)
-		Lines[j] = Tmp[i];
+		Lines[j] = Information[i];
 	for (int i = 0; i < 4; i++)
 		for (int j = 3; j > i; j--)
 			if (Lines[j] < Lines[j - 1])
@@ -162,14 +161,23 @@ int Player::delLine() {
 		*/
 	}
 
-	for (int i = DOWN_LIM; i <= UP_LIM; i++) {
+	for (int i = DOWN_LIM-1; i >= UP_LIM; i--) {
 		bool EmptyLine = 1;
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 			EmptyLine &= !MapSqure[i][j];
-		if (!EmptyLine) continue;
-		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++) {
-			MapSqure[i][j] = MapSqure[i + 1][j];
-			MapSqure[i + 1][j] = 0;
+		if (EmptyLine) continue;
+		int Line = i;
+		while (1) {
+			if (Line == DOWN_LIM) break;
+			EmptyLine = 1;
+			for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
+				EmptyLine &= !MapSqure[Line+1][j];
+			if (!EmptyLine) break;
+			for (int j = LEFT_LIM; j <= RIGHT_LIM; j++) {
+				MapSqure[Line + 1][j] = MapSqure[Line][j];
+				MapSqure[Line][j] = 0;
+			}
+			Line++;
 		}
 	}
 
@@ -186,24 +194,22 @@ int Player::renewBrick() {
 	*/
 	int countDeleteLine = delLine();
 	NowBrick = NextBrick;
-	NowBrick.brickSet(24, LEFT_LIM + RIGHT_LIM >> 1);
+	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
 	return countDeleteLine;
 }
 int Player::addLine(int CountLine) {
+	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 1;
 	if (GameOver)
 		return 0;
-	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 1, Seed = time(NULL) % Bas;
-	for (int i = UP_LIM - CountLine; i >= DOWN_LIM; i--)
+	for (int i = DOWN_LIM - CountLine; i >= UP_LIM; i--)
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 			MapSqure[i + CountLine][j] = MapSqure[i][j];
 	/*
 	Move all of the map up.
 	*/
 	for (int i = DOWN_LIM, j = 1; j <= CountLine; i++, j++) {
-		int State = Seed;
-		Seed = (Seed ^ 993410) * 19491001 + 19260817;
-		Seed = (Seed % Bas + Bas) % Bas;
+		int State = rand() % Bas;
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++, State >>= 1)
 			MapSqure[i][j] = (State & 1);
 	}
