@@ -137,21 +137,25 @@ void Brick::brickSet(int x, int y) {
 void Brick::shiftLeft(int pace) {
 	for (int i = 2;i <= 8; i += 2)
 		BrickPos[i] -= pace;
+	CenterY -= pace;
 }
 
 void Brick::shiftRight(int pace) {
 	for (int i = 2; i <= 8; i += 2)
 		BrickPos[i] += pace;
+	CenterY += pace;
 }
 
 void Brick::shiftUp(int pace) {
 	for (int i = 1; i <= 7; i += 2)
 		BrickPos[i] -= pace;
+	CenterX -= pace;
 }
 
 void Brick::shiftDown(int pace) {
 	for (int i = 1; i <= 7; i += 2)
 		BrickPos[i] += pace;
+	CenterX += pace;
 }
 
 int* Brick::getInformation() {
