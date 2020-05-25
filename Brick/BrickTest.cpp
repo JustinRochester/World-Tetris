@@ -94,13 +94,21 @@ void testrotate(Brick a) {
 	}
 	cout << "------------------------------------" << endl;
 }
+void testleftandrote(Brick a) {
+	a.Operation(Brick::Update);
+	a.brickSet(5, 5);
+	init(a);
+	out();
+	a.Operation(Brick::Up);
+	init(a);
+	out();
+	a.Operation(Brick::Rotate);
+	init(a);
+	out();
+
+}
 void test(Brick a) {
-	testup(a);
-	testdown(a);
-	testleft(a);
-	testright(a);
-	testupdate(a);
-	testrotate(a);
+	testleftandrote(a);
 }
 int main() {
 	srand(time(0));
