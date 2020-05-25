@@ -5,7 +5,7 @@
 #include<conio.h>
 using namespace std;
 
-class Rander
+class Render
 {
 private:
 	int type;				//模式 
@@ -23,7 +23,7 @@ void SetPos(int i, int j)			//控制光标位置， 列， 行
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
-void Rander::Welocme()	//游戏刚进去的界面	
+void Render::Welocme()	//游戏刚进去的界面	
 {
 	SetColor(3);//设置颜色 
 	char x;
@@ -48,7 +48,7 @@ void Rander::Welocme()	//游戏刚进去的界面
 	}
 }
 
-void Rander::SetColor(int color_num)//设置颜色
+void Render::SetColor(int color_num)//设置颜色
 {
 	int n;
 	switch(color_num)
@@ -66,7 +66,7 @@ void Rander::SetColor(int color_num)//设置颜色
 	}
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), n);
 }
-void Rander::DrawMap1()				//单人画游戏时界面
+void Render::DrawMap1()				//单人画游戏时界面
 {
 	int i;
 	for(i = 0; i <= 15; i++)	
@@ -111,7 +111,7 @@ void Rander::DrawMap1()				//单人画游戏时界面
 	cout << "下一图形:";
  } 
 
-void Rander::DrawMap2()				//双人画游戏时界面
+void Render::DrawMap2()				//双人画游戏时界面
 {
 	int i;
 	SetColor(0);
