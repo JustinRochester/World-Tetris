@@ -3,21 +3,23 @@
 
 class Brick {
 private:
-	int BrickColor;//æ–¹å—é¢œè‰²
-	int BrickType;//æ–¹å—ç±»å‹
-	int BrickPos[9];//åæ ‡é›†åˆ
-	int CenterX, CenterY;//ä¸­å¿ƒç‚¹åæ ‡
-	void shiftLeft(int pace = 1);//å·¦ç§»
-	void shiftRight(int pace = 1);//å³ç§»
-	void shiftDown(int pace = 1);//ä¸‹ç§»
-	void shiftUp(int pace = 1);//ä¸Šç§»
-	void brickUpdate();//æ›´æ–°é¢œè‰²å’Œç±»å‹
-	void rotateBrick();//é¡ºæ—¶é’ˆæ—‹è½¬
-	static const int TotalBrickType = 17, TotalColorType = 4;
+	int BrickColor;//·½¿éÑÕÉ«
+	int BrickType;//·½¿éÀàĞÍ
+	int BrickPos[9];//×ø±ê¼¯ºÏ
+	int CenterX, CenterY;//ÖĞĞÄµã×ø±ê
+	void shiftLeft(int pace = 1);//×óÒÆ
+	void shiftRight(int pace = 1);//ÓÒÒÆ
+	void shiftDown(int pace = 1);//ÏÂÒÆ
+	void shiftUp(int pace = 1);//ÉÏÒÆ
+	void brickUpdate();//¸üĞÂÑÕÉ«ºÍÀàĞÍ
+	void rotateBrick();//Ë³Ê±ÕëĞı×ª
+	static const int TotalBrickType = 7, TotalColorType = 4;
+	static int randlyAssign();
 public:
 	static const int Up = 1, Down = 2,Left = 3, Right = 4, Rotate = 5, Update = 6;
-	Brick();//åˆå§‹åŒ–ç±»å‹å’Œé¢œè‰²
-	void brickSet(int x, int y);//é€šè¿‡x,yåˆå§‹åŒ–åæ ‡
-	void Operation(int _Order);//è¯†åˆ«æŒ‡ä»¤
-	int* getInformation();//è¿”å›ä¿¡æ¯
+	Brick();//³õÊ¼»¯ÀàĞÍºÍÑÕÉ«
+	void brickSet(int x, int y);//Í¨¹ıx,y³õÊ¼»¯×ø±ê
+	void Operation(int _Order);//Ê¶±ğÖ¸Áî
+	int* getInformation();//·µ»ØĞÅÏ¢
 };
+
