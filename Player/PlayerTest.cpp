@@ -58,6 +58,7 @@ const char RIGHT = 77;
 const char DERECTION = 224;
 const char ESC = 0x1b;
 const char BLANK = 32;
+const char BACK = 8;
 
 Player p1(1);
 int main() {
@@ -69,6 +70,12 @@ int main() {
 		if (c == BLANK) {
 			p1.run(0);
 			display(p1);
+			continue;
+		}
+		if (c == BACK) {
+			int T=p1.addLine(3);
+			display(p1);
+			cout << T << endl;
 			continue;
 		}
 		if (c != DERECTION) continue;

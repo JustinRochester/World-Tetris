@@ -22,6 +22,15 @@ Player::Player(bool StartGame) {
 	NowBrick.Operation(Brick::Update);
 	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
+
+	int NowLine = 0;
+	for (int* Information = NowBrick.getInformation() + 1, i = 1; i < 9; i += 2, Information += 2)
+		if (*Information > NowLine)
+			NowLine = *Information;
+	while (NowLine < 10) {
+		NowBrick.Operation(Brick::Down);
+		NowLine++;
+	}
 }
 void Player::setName(const std::string& Name_) {
 	Name = Name_;
@@ -63,12 +72,13 @@ bool Player::carryCommand(int Direction) {
 	}
 	if (Direction == Brick::Down) {
 		/*
-		The Command that this player given is down to the bottom.
+		The command that this player given is down quickly.
+		So, I set that it falls down 3 cells in this game.
 		*/
-		NowBrick.Operation(Brick::Down);
-		while (!isOverlap())
+		for (int i = 1; i <= 3; i++)
 			NowBrick.Operation(Brick::Down);
-		NowBrick.Operation(Brick::Up);
+		while (isOverlap())
+			NowBrick.Operation(Brick::Up);
 		return true;
 	}
 	if (Direction == Brick::Rotate) {
@@ -196,20 +206,30 @@ int Player::renewBrick() {
 	NowBrick = NextBrick;
 	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
+
+	int NowLine = 0;
+	for (int* Information = NowBrick.getInformation() + 1, i = 1; i < 9; i += 2, Information += 2)
+		if (*Information > NowLine)
+			NowLine = *Information;
+	while (NowLine < 10) {
+		NowBrick.Operation(Brick::Down);
+		NowLine++;
+	}
+
 	return countDeleteLine;
 }
 int Player::addLine(int CountLine) {
-	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 1;
+	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 2;
 	if (GameOver)
 		return 0;
-	for (int i = DOWN_LIM - CountLine; i >= UP_LIM; i--)
+	for (int i = UP_LIM; i <= DOWN_LIM - CountLine; i++)
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
-			MapSqure[i + CountLine][j] = MapSqure[i][j];
+			MapSqure[i][j] = MapSqure[i + CountLine][j];
 	/*
 	Move all of the map up.
 	*/
-	for (int i = DOWN_LIM, j = 1; j <= CountLine; i++, j++) {
-		int State = rand() % Bas;
+	for (int i = DOWN_LIM, j = 1; j <= CountLine; i--, j++) {
+		int State = rand() % Bas + 1;
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++, State >>= 1)
 			MapSqure[i][j] = (State & 1);
 	}
@@ -220,7 +240,6 @@ int Player::addLine(int CountLine) {
 	if (isOverlap()) {
 		while (isOverlap())
 			NowBrick.Operation(Brick::Up);
-		NowBrick.Operation(Brick::Down);
 	}
 	if (touchBottom()) {
 		addToMap();
@@ -242,15 +261,27 @@ int Player::run(int Direction) {
 	/*
 	The method would not work if the game of this player is over.
 	*/
-	if (!carryCommand(Direction))
-		return 0;
-	/*
-	The invalid carring means that there is nothing changed in the map.
-	*/
 	int CountDeleteLine = 0;
-	if (touchBottom()) {
+	if (Direction == 0 && touchBottom()) {
 		addToMap();
 		CountDeleteLine = renewBrick();
+		/*
+		It will just add the brick to the map, if the brick is touching the bottom and the command order it falls down 1 cells.
+		*/
+	}
+	else {
+		if (!carryCommand(Direction))
+			return 0;
+		/*
+		The invalid carring means that there is nothing changed in the map.
+		*/
+		if (Direction == Brick::Down && touchBottom()) {
+			addToMap();
+			CountDeleteLine = renewBrick();
+			/*
+			It will not be added to the map, if the brick isn't touches the bottom or the command doesn't order it falls down quickly.
+			*/
+		}
 	}
 	if (touchCeiling()) {
 		GameOver = 1;
