@@ -3,21 +3,29 @@
 
 int Brick::randlyAssign() {
 	int _Type = rand() % TotalBrickType;// TotalBrickType = 7;
+	int Sym = 0;
 	if (_Type == 5)// 对称的'7'
-		_Type = 1;
+		_Type = 1, Sym = 1;
 	else if (_Type == 6)//对称的'z'
-		_Type = 4;
+		_Type = 4, Sym = 1;
 	_Type += 1;
-	if (_Type == 9)
-		return _Type;
-	_Type += rand() % 4;
-	return _Type;
+	_Type = (_Type - 1 << 2) | (rand() & 3);
+	if (_Type > 9) _Type -= 3;
+	return (_Type << 1) | Sym;
 
+}
+
+void Brick::Symmetry() {
+	if (!IsSym) return;
+	for (int i = 1; i < 9; i += 2)
+		BrickPos[i] = 2 * CenterX - BrickPos[i];
 }
 
 void Brick::brickUpdate() {
 	BrickColor = (rand() % TotalColorType) + 1;
 	BrickType = Brick::randlyAssign();
+	IsSym = BrickType & 1;
+	BrickType >>= 1;
 	for (int i = 1; i < 9; ++i)
 		BrickPos[i] = 0;
 	BrickPos[0] = BrickColor;
@@ -146,6 +154,7 @@ void Brick::brickSet(int x, int y) {
 			BrickPos[6] = BrickPos[8] = y;
 			break;
 	}
+	Symmetry();
 }
 
 void Brick::shiftLeft(int pace) {
@@ -179,7 +188,13 @@ int* Brick::getInformation() {
 void Brick::rotateBrick() {
 	int x = CenterX;
 	int y = CenterY;
-	switch(BrickType) {
+
+	int CountRotate;
+	if (IsSym) CountRotate = 3;
+	else CountRotate = 1;
+
+	for (int i = 1; i <= CountRotate; i++) {
+		switch (BrickType) {
 		case 1:
 			BrickType = 2;
 			break;
@@ -218,7 +233,7 @@ void Brick::rotateBrick() {
 			break;
 		case 13:
 			BrickType = 10;
-			break;	
+			break;
 		case 14:
 			BrickType = 15;
 			break;
@@ -231,6 +246,7 @@ void Brick::rotateBrick() {
 		case 17:
 			BrickType = 14;
 			break;
+		}
 	}
 	brickSet(x, y);
 }

@@ -7,12 +7,14 @@ private:
 	int BrickType;//方块类型
 	int BrickPos[9];//坐标集合
 	int CenterX, CenterY;//中心点坐标
+	bool IsSym;//是否对称（关于x轴翻转）
 	void shiftLeft(int pace = 1);//左移
 	void shiftRight(int pace = 1);//右移
 	void shiftDown(int pace = 1);//下移
 	void shiftUp(int pace = 1);//上移
 	void brickUpdate();//更新颜色和类型
 	void rotateBrick();//顺时针旋转
+	void Symmetry();//翻转
 	static const int TotalBrickType = 7, TotalColorType = 4;
 	static int randlyAssign();
 public:
