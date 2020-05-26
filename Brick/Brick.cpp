@@ -10,7 +10,8 @@ int Brick::randlyAssign() {
 		_Type = 4, Sym = 1;
 	_Type += 1;
 	_Type = (_Type - 1 << 2) | (rand() & 3);
-	if (_Type > 9) _Type -= 3;
+	if (_Type > 11) _Type -= 3;
+	else if (_Type > 9) _Type = 9;
 	return (_Type << 1) | Sym;
 
 }
