@@ -17,6 +17,7 @@ private:
 	void Symmetry();//翻转
 	static const int TotalBrickType = 7, TotalColorType = 4;
 	static int randlyAssign();
+
 public:
 	static const int Up = 1, Down = 2,Left = 3, Right = 4, Rotate = 5, Update = 6;
 	Brick();//初始化类型和颜色

@@ -8,8 +8,8 @@ int Brick::randlyAssign() {
 		_Type = 1, Sym = 1;
 	else if (_Type == 6)//¶Ô³ÆµÄ'z'
 		_Type = 4, Sym = 1;
+	_Type = (_Type << 2) | (rand() & 3);
 	_Type += 1;
-	_Type = (_Type - 1 << 2) | (rand() & 3);
 	if (_Type > 11) _Type -= 3;
 	else if (_Type > 9) _Type = 9;
 	return (_Type << 1) | Sym;
@@ -195,7 +195,12 @@ void Brick::rotateBrick() {
 	else CountRotate = 1;
 
 	for (int i = 1; i <= CountRotate; i++) {
-		switch (BrickType) {
+		BrickType--;
+		if (BrickType >= 8) BrickType += 3;
+		BrickType = ((BrickType >> 2) << 2) | ((BrickType + 1) & 3);
+		if (BrickType > 8) BrickType -= 3;
+		BrickType++;
+		/*switch (BrickType) {
 		case 1:
 			BrickType = 2;
 			break;
@@ -247,7 +252,7 @@ void Brick::rotateBrick() {
 		case 17:
 			BrickType = 14;
 			break;
-		}
+		}*/
 	}
 	brickSet(x, y);
 }
