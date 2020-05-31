@@ -1,6 +1,7 @@
-#pragma once
 #include <cstdlib>
 
+#ifndef _BRICK
+#define _BRICK
 class Brick {
 private:
 	int BrickColor;//方块颜色
@@ -25,4 +26,4 @@ public:
 	void Operation(int _Order);//识别指令
 	int* getInformation();//返回信息
 };
-
+#endif
