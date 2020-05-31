@@ -1,7 +1,8 @@
 #include<cstdlib>
 #include<windows.h>
 #include<conio.h>
-
+#ifndef Render
+#define Render
 class Render
 {
 private:
@@ -13,3 +14,4 @@ public:
 	void DrawMap1();			//游戏界面
 	void DrawMap2(); 
 };
+#endif
