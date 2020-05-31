@@ -289,3 +289,6 @@ int Player::run(int Direction) {
 	}
 	return CountDeleteLine;
 }
+bool Player::IsGameOver() {
+	return GameOver;
+}

@@ -1,5 +1,6 @@
 #include<string>
 #include"Brick.h"
+#include"Game.h"
 
 #ifndef _PLAYER
 #define _PLAYER
@@ -19,11 +20,13 @@ private:
 	void addToMap();
 	int delLine();
 	int renewBrick();
+	friend void Game::renderMap();
 #ifdef DEBUG
 	friend void display(Player &p);
 #endif
 
 public:
+	bool IsGameOver();
 	Player(bool StartGame=0);
 	void setName(const std::string& Name_);
 	int run(int Direction);
