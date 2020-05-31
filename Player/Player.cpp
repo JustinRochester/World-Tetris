@@ -292,3 +292,9 @@ int Player::run(int Direction) {
 bool Player::IsGameOver() {
 	return GameOver;
 }
+int Player::getScore() {
+	return CountScore;
+}
+std::string Player::getName() {
+	return Name;
+}

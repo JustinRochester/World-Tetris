@@ -27,6 +27,8 @@ private:
 
 public:
 	bool IsGameOver();
+	int getScore();
+	std::string getName();
 	Player(bool StartGame=0);
 	void setName(const std::string& Name_);
 	int run(int Direction);

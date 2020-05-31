@@ -4,6 +4,7 @@
 #include<windows.h>
 #include<ctime>
 #include<cstdlib>
+#include<iostream>
 
 int Game::FramesCount = 0;
 int Game::FramesTime = 100;
@@ -15,6 +16,14 @@ const char Game::DOWN = 80;
 const char Game::DIRECTIONS = 224;
 const char Game::ESC = 27;
 const char Game::ENTER = 13;
+
+Game::~Game() {
+	for (int i = 0; i < 2; i++)
+		if (player[i] != NULL) {
+			delete player[i];
+			player[i] = NULL;
+		}
+}
 
 Game::Game() {
 	player[0] = player[1] = NULL;
@@ -130,10 +139,11 @@ void Game::play() {
 	renderMap();
 	for (clock_t last = clock(), now = last;; now = clock()) {
 		if (_kbhit()) {
-			clock_t StartTime = clock(), EndTime;
+			clock_t LastTime = clock();
 			carryCommand(_getch());
-			EndTime = clock();
-			Sleep(Game::FramesTime - (StartTime - EndTime));
+			LastTime = clock()-LastTime;
+			if(Game::FramesTime>LastTime)
+				Sleep(Game::FramesTime - LastTime);
 		}
 		else {
 			Sleep(Game::FramesTime);
@@ -158,7 +168,10 @@ void Game::play() {
 	}
 
 	system("cls");
-	puts("Game is over. Push key enter to continue, and key ESC to escape.");
+	std::cout << "Game over."<<std::endl;
+	for (int i = 0; i < CountPlayer; i++)
+		std::cout << "\tPlayer: " << player[i]->getName() << " get scores " << player[i]->getScore() << std::endl;
+	std::cout<<"Push key enter to continue, and key ESC to escape."<<std::endl;
 }
 void Game::run() {
 	welcome();
