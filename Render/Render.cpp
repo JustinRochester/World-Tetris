@@ -73,25 +73,25 @@ void Render::SetColor(int color_num)//设置颜色
 
 	{
 
-		case 0: n = 0x08; break;
+		case 0: n = 0x08; break;//灰色
 
-		case 1: n = 0x0C; break;
+		case 1: n = 0x0C; break;//红色
 
-		case 2: n = 0x0D; break;
+		case 2: n = 0x0D; break;//紫色
 
-		case 3: n = 0x0E; break;
+		case 3: n = 0x0E; break;//黄色
 
-		case 4: n = 0x0A; break;
+		case 4: n = 0x0A; break;//绿色
 
-		case 5: n = 0x0F; break;
+		case 5: n = 0x0F; break;//白色
 
-		case 6: n = 0x09; break;
+		case 6: n = 0x09; break;//蓝色
 
-		case 7: n = 0x0B; break;
+		case 7: n = 0x0B; break;//淡浅绿色
 
-		case 8: n = 0x05; break;
+		case 8: n = 0x05; break;//深紫色
 
-		case 9: n = 0x03; break;
+		case 9: n = 0x03; break;//浅绿色（有点蓝）
 
 	}
 
