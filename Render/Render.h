@@ -1,17 +1,21 @@
 #include<cstdlib>
 #include<windows.h>
 #include<conio.h>
-#ifndef Render
-#define Render
+#ifndef _Render
+#define _Render
 class Render
 {
 private:
-	int type;				//æ¨¡å¼ 
-	int score; 
+	int type;				//Ä£Ê½ 
 public:
-	void Welcome();			//é¦–ç•Œé¢
-	void SetColor(int);		//æ§åˆ¶é¢œè‰²
-	void DrawMap1();			//æ¸¸æˆç•Œé¢
-	void DrawMap2(); 
+	void Welcome();			//Ê×½çÃæ
+	void SetColor(int);		//¿ØÖÆÑÕÉ«
+	void DrawMap1(int score);			//ÓÎÏ·½çÃæ
+	void DrawMap2(int score1, int score2);
+	void DrawGame1(int Map[32][12], int BrickCol, const int *NextBrick);  //single-player 
+	static void HideCursor();
+	static void SetTitle();
 };
+
 #endif
+
