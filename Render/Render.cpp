@@ -211,7 +211,17 @@ void Render::DrawGame1(int Map[31][12], int BrickCol, const int *NextBrick) {
 				SetColor(BrickCol);
 				SetPos(2 * j, (i - 10));
 				cout << "¡ö";
+			}
+			else {
+				SetPos(2 * j, i - 10);
+				cout << "  ";
 			} 
+		}
+	}
+	for (int i = 22; i <= 26; ++i) {
+		for (int j = 6; j <= 9; ++j) {
+			SetPos(2 * i, j);
+			cout << "  ";
 		}
 	}
 	SetColor(NextBrick[0]);

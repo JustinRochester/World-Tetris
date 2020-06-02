@@ -12,9 +12,12 @@ private:
 	static const char ESC, LEFT, RIGHT, UP, DOWN, DIRECTIONS, ENTER;
 
 	void welcome();
-	void carryCommand(char c);
+	void carryCommand(char);
 	void setGameMode();
 	void play();
+	void addOtherLines(int,int);
+	void moveCur(int&,char);
+	void helpText();
 
 public:	
 	Game();	
