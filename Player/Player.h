@@ -19,7 +19,7 @@ private:
 	bool touchCeiling();
 	void addToMap();
 	int delLine();
-	int renewBrick();
+	void renewBrick();
 	friend void Game::renderMap();
 #ifdef DEBUG
 	friend void display(Player &p);

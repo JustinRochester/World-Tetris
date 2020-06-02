@@ -23,14 +23,7 @@ Player::Player(bool StartGame) {
 	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
 
-	int NowLine = 0;
-	for (int* Information = NowBrick.getInformation() + 1, i = 1; i < 9; i += 2, Information += 2)
-		if (*Information > NowLine)
-			NowLine = *Information;
-	while (NowLine < 10) {
-		NowBrick.Operation(Brick::Down);
-		NowLine++;
-	}
+	renewBrick();
 }
 void Player::setName(const std::string& Name_) {
 	Name = Name_;
@@ -191,21 +184,20 @@ int Player::delLine() {
 		}
 	}
 
-	CountScore += CountDeleteLine * (CountDeleteLine + 1) / 2;
+	CountScore += CountDeleteLine * (CountDeleteLine + 1) * 5;
 
 	return CountDeleteLine;
 }
-int Player::renewBrick() {
+void Player::renewBrick() {
 	/*
 	This method is used while the working brick touches the bottom.
 	And this method is used to renew the working brick.
-	Because the renewing will change the state of the brick which is working now,
-	it will return the number of line(s) which is deleted, too.
+	Also, it will set the next btick into (1,1).
 	*/
-	int countDeleteLine = delLine();
 	NowBrick = NextBrick;
 	NowBrick.brickSet(6, LEFT_LIM + RIGHT_LIM >> 1);
 	NextBrick.Operation(Brick::Update);
+	NextBrick.brickSet(1, 1);
 
 	int NowLine = 0;
 	for (int* Information = NowBrick.getInformation() + 1, i = 1; i < 9; i += 2, Information += 2)
@@ -215,8 +207,31 @@ int Player::renewBrick() {
 		NowBrick.Operation(Brick::Down);
 		NowLine++;
 	}
+	/*
+	Set the working brick so that it will fall down in the screen in the next fall down command.
+	*/
 
-	return countDeleteLine;
+	int minI = DOWN_LIM, minJ = LEFT_LIM;
+	for (int* Information = NextBrick.getInformation() + 1, i = 1; i < 9; i += 2, Information += 2) {
+		if (Information[0] < minI) minI = Information[0];
+		if (Information[1] < minJ) minJ = Information[1];
+	}
+	while (minI < 1) {
+		NextBrick.Operation(Brick::Down);
+		minI++;
+	}
+	while (minI > 1) {
+		NextBrick.Operation(Brick::Up);
+		minI--;
+	}
+	while (minJ < 1) {
+		NextBrick.Operation(Brick::Right);
+		minJ++;
+	}
+	while (minJ > 1) {
+		NextBrick.Operation(Brick::Left);
+		minJ--;
+	}
 }
 int Player::addLine(int CountLine) {
 	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 2;
@@ -243,7 +258,8 @@ int Player::addLine(int CountLine) {
 	}
 	if (touchBottom()) {
 		addToMap();
-		CountDeleteLine = renewBrick();
+		CountDeleteLine = delLine();
+		renewBrick();
 	}
 	/*
 	Move the working brick up if it overlaps the map.
@@ -264,7 +280,8 @@ int Player::run(int Direction) {
 	int CountDeleteLine = 0;
 	if (Direction == 0 && touchBottom()) {
 		addToMap();
-		CountDeleteLine = renewBrick();
+		CountDeleteLine = delLine();
+		renewBrick();
 		/*
 		It will just add the brick to the map, if the brick is touching the bottom and the command order it falls down 1 cells.
 		*/
@@ -277,7 +294,8 @@ int Player::run(int Direction) {
 		*/
 		if (Direction == Brick::Down && touchBottom()) {
 			addToMap();
-			CountDeleteLine = renewBrick();
+			CountDeleteLine = delLine();
+			renewBrick();
 			/*
 			It will not be added to the map, if the brick isn't touches the bottom or the command doesn't order it falls down quickly.
 			*/

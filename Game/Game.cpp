@@ -17,6 +17,14 @@ const char Game::DIRECTIONS = 224;
 const char Game::ESC = 27;
 const char Game::ENTER = 13;
 
+Game::Game() {
+	render.HideCursor();
+	render.SetTitle();
+	player[0] = player[1] = NULL;
+	CountPlayer = 0;
+	GameMode = 0;
+}
+
 Game::~Game() {
 	for (int i = 0; i < 2; i++)
 		if (player[i] != NULL) {
@@ -25,39 +33,29 @@ Game::~Game() {
 		}
 }
 
-Game::Game() {
-	player[0] = player[1] = NULL;
-	CountPlayer = 0;
-	GameMode = 0;
-}
-
 void Game::welcome() {
 	puts("welcome!");
 }
 
 void Game::renderMap() {
-	char Map[32][12] = { 0 };
-	for (int i = 1; i <= 30; i++)
-		for (int j = 1; j <= 10; j++)
-			if (player[0]->MapSqure[i][j])
-				Map[i][j] = 'o';
+	int Map[32][12] = { 0 }, Infor[9] = { 0 };
+	for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+		Infor[i] = *NextState;
 	const int* Pnt = player[0]->NowBrick.getInformation();
-	for (int i = 1; i < 9; i += 2)
-		Map[Pnt[i]][Pnt[i + 1]] = '*';
+	if (!player[0]->GameOver) {
+		for (int i = 1; i <= 30; i++)
+			for (int j = 1; j <= 10; j++)
+				if (player[0]->MapSqure[i][j])
+					Map[i][j] = -1;
+		for (int i = 1; i < 9; i += 2)
+			Map[Pnt[i]][Pnt[i + 1]] = 1;
+	}
+	else
+		Infor[0] = 5;
 
 	system("cls");
-	for (int i = 11; i <= 30; i++) {
-		putchar('|');
-		for (int j = 1; j <= 10; j++)
-			putchar(Map[i][j]);
-		putchar('|');
-		putchar('\n');
-	}
-	putchar(0);
-	for (int j = 1; j <= 10; j++)
-		putchar('-');
-	putchar(0);
-	putchar('\n');
+	render.DrawMap1(player[0]->CountScore);
+	render.DrawGame1(Map, Pnt[0],Infor);
 }
 
 void Game::setGameMode() {
@@ -141,6 +139,7 @@ void Game::play() {
 		if (_kbhit()) {
 			clock_t LastTime = clock();
 			carryCommand(_getch());
+			renderMap();
 			LastTime = clock()-LastTime;
 			if(Game::FramesTime>LastTime)
 				Sleep(Game::FramesTime - LastTime);
@@ -158,10 +157,10 @@ void Game::play() {
 			if(CountPlayer==2)
 				player[1]->run(0);
 			Game::FramesCount -= FramesLimit;
+			renderMap();
 		}
 		if (player[0]->IsGameOver() && player[1]->IsGameOver())
 			break;
-		renderMap();
 		/*
 		To render the map.
 		*/
