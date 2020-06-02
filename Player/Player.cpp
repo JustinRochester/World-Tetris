@@ -68,10 +68,13 @@ bool Player::carryCommand(int Direction) {
 		The command that this player given is down quickly.
 		So, I set that it falls down 3 cells in this game.
 		*/
-		for (int i = 1; i <= 3; i++)
+		for (int i = 1; i <= 3; i++) {
 			NowBrick.Operation(Brick::Down);
-		while (isOverlap())
+			if (!isOverlap())
+				continue;
 			NowBrick.Operation(Brick::Up);
+			break;
+		}
 		return true;
 	}
 	if (Direction == Brick::Rotate) {
