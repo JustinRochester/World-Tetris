@@ -13,11 +13,12 @@ private:
 
 	void welcome();
 	void carryCommand(char);
+	void GameModeMenu(int);
 	void setGameMode();
 	bool play();
 	void addOtherLines(int,int);
 	void moveCur(int&,char);
-	void helpText();
+	void helpText(int GameMode);
 
 public:	
 	Game();	

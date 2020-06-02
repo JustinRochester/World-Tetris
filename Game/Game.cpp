@@ -33,7 +33,7 @@ Game::~Game() {
 		}
 }
 
-void Game::helpText(){
+void Game::helpText(int GameMode){
 	std::cout << "当你们看见方块掉落时，什么都不要干，就这么看着它。" << std::endl;
 	std::cout << "谁先顶到天花板，谁就赢了。" << std::endl;
 	std::cout<< std::endl;
@@ -44,7 +44,7 @@ void Game::helpText(){
 	std::cout << "\t消除 4 行，记录 100 分" << std::endl;
 	std::cout << std::endl;
 	if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
-		std::cout << "作为惩罚，每加 10 分，方块下落会变快一次，直至上限" << std::endl;
+		std::cout << "为了让你消行了还能顶到天花板，每加 10 分，方块下落会变快一次，直至上限" << std::endl;
 		std::cout << std::endl;
 	}
 	if (GameMode == 8 || GameMode == 9) {
@@ -65,6 +65,7 @@ void Game::helpText(){
 }
 
 void Game::welcome() {
+	render.Welcome();
 }
 
 void Game::renderMap() {
@@ -170,6 +171,41 @@ void Game::moveCur(int& NowCur, char Command) {
 	}
 }
 
+void Game::GameModeMenu(int Cur){
+	/*
+	This method is used to ouput the menu of game modes.
+	*/
+	system("cls");
+	std::cout << "<><><><><><><><><><><><><><><>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>      请选择游戏模式      <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>  (输入 ESC 键可退出游戏) <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((0 == Cur) * '>') << char((0 == Cur) * '>') << " " << "单人修仙" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((1 == Cur) * '>') << char((1 == Cur) * '>') << " " << "单人加行" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((2 == Cur) * '>') << char((2 == Cur) * '>') << " " << "单人加速" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((3 == Cur) * '>') << char((3 == Cur) * '>') << " " << "单人加行加速" << "      <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((4 == Cur) * '>') << char((4 == Cur) * '>') << " " << "双人修仙" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((5 == Cur) * '>') << char((5 == Cur) * '>') << " " << "双人加行" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((6 == Cur) * '>') << char((6 == Cur) * '>') << " " << "双人加速" << "          <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((7 == Cur) * '>') << char((7 == Cur) * '>') << " " << "双人加行加速" << "      <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((8 == Cur) * '>') << char((8 == Cur) * '>') << " " << "双人此消彼长" << "      <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<>     " << char((9 == Cur) * '>') << char((9 == Cur) * '>') << " " << "双人此消彼长加速" << "  <>" << std::endl;
+	std::cout << "<>                          <>" << std::endl;
+	std::cout << "<><><><><><><><><><><><><><><>" << std::endl;
+}
+
 void Game::setGameMode() {
 
 	for (int i = 0; i < 2; i++)
@@ -181,19 +217,7 @@ void Game::setGameMode() {
 
 	int Cur = 0, CountGameMode = 10;
 	while (1) {
-		system("cls");
-		std::cout << "请选择游戏模式" << std::endl;
-		std::cout << char((0 == Cur) * '>') << char((0 == Cur) * '>') << "单人修仙" << std::endl;
-		std::cout << char((1 == Cur) * '>') << char((1 == Cur) * '>') << "单人加行" << std::endl;
-		std::cout << char((2 == Cur) * '>') << char((2 == Cur) * '>') << "单人加速" << std::endl;
-		std::cout << char((3 == Cur) * '>') << char((3 == Cur) * '>') << "单人加行加速" << std::endl;
-		std::cout << char((4 == Cur) * '>') << char((4 == Cur) * '>') << "双人修仙" << std::endl;
-		std::cout << char((5 == Cur) * '>') << char((5 == Cur) * '>') << "双人加行" << std::endl;
-		std::cout << char((6 == Cur) * '>') << char((6 == Cur) * '>') << "双人加速" << std::endl;
-		std::cout << char((7 == Cur) * '>') << char((7 == Cur) * '>') << "双人加行加速" << std::endl;
-		std::cout << char((8 == Cur) * '>') << char((8 == Cur) * '>') << "双人此消彼长" << std::endl;
-		std::cout << char((9 == Cur) * '>') << char((9 == Cur) * '>') << "双人此消彼长加速" << std::endl;
-		std::cout << std::endl << "单击 ESC 键可退出游戏" << std::endl;
+		GameModeMenu(Cur);
 
 		char c = _getch();
 		if (c == ESC)
@@ -312,7 +336,7 @@ bool Game::play() {
 				break;
 			else if (Cur == 1) {
 				system("cls");
-				helpText();
+				helpText(GameMode);
 				continue;
 			}
 			else if (Cur == 2)
@@ -397,6 +421,7 @@ bool Game::play() {
 }
 void Game::run() {
 	welcome();
+	render.SetColor(5);
 	while (1) {
 		setGameMode();
 		if (CountPlayer == 0)
