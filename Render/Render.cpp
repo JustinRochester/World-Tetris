@@ -105,6 +105,8 @@ void Render::SetColor(int color_num)//设置颜色
 
 		case 9: n = 0x03; break;//浅绿色（有点蓝）
 
+		case 10: n= 0x00; break;//黑色
+
 	}
 
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), n);
