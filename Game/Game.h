@@ -14,7 +14,7 @@ private:
 	void welcome();
 	void carryCommand(char);
 	void setGameMode();
-	void play();
+	bool play();
 	void addOtherLines(int,int);
 	void moveCur(int&,char);
 	void helpText();

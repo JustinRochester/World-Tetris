@@ -193,6 +193,7 @@ void Game::setGameMode() {
 		std::cout << char((7 == Cur) * '>') << char((7 == Cur) * '>') << "双人加行加速" << std::endl;
 		std::cout << char((8 == Cur) * '>') << char((8 == Cur) * '>') << "双人此消彼长" << std::endl;
 		std::cout << char((9 == Cur) * '>') << char((9 == Cur) * '>') << "双人此消彼长加速" << std::endl;
+		std::cout << std::endl << "单击 ESC 键可退出游戏" << std::endl;
 
 		char c = _getch();
 		if (c == ESC)
@@ -288,9 +289,10 @@ void Game::carryCommand(char c) {
 	}
 }
 
-void Game::play() {
+bool Game::play() {
 	/*
 	This method is used to carry the World-Teris game circularly.
+	It will return that whether the game is started.
 	*/
 
 	int Cur = 0;
@@ -298,10 +300,11 @@ void Game::play() {
 		system("cls");
 		std::cout << char((0 == Cur) * '>') << char((0 == Cur) * '>') << "开始游戏" << std::endl;
 		std::cout << char((1 == Cur) * '>') << char((1 == Cur) * '>') << "查看帮助" << std::endl;
+		std::cout << char((2 == Cur) * '>') << char((2 == Cur) * '>') << "选择其他模式" << std::endl;
 		char c = _getch();
 		if (c == ESC) {
 			system("cls");
-			return;
+			return 0;
 		}
 		if (c == ENTER) {
 			if (0);
@@ -312,10 +315,12 @@ void Game::play() {
 				helpText();
 				continue;
 			}
+			else if (Cur == 2)
+				return 0;
 		}
 		else {
 			moveCur(Cur, c);
-			Cur = (Cur % 2 + 2) % 2;
+			Cur = (Cur % 3 + 3) % 3;
 		}
 	}
 
@@ -388,6 +393,7 @@ void Game::play() {
 	std::cout << "游戏结束"<<std::endl;
 	for (int i = 0; i < CountPlayer; i++)
 		std::cout << "\t玩家: " << player[i]->getName() << " 得分 " << player[i]->getScore() << std::endl;
+	return 1;
 }
 void Game::run() {
 	welcome();
@@ -395,7 +401,9 @@ void Game::run() {
 		setGameMode();
 		if (CountPlayer == 0)
 			break;
-		play();
+		bool Res=play();
+		if (!Res)
+			continue;
 		std::cout << "按回车键继续游戏，退出键退出游戏" << std::endl;
 		char c;
 		while (1) {
