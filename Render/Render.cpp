@@ -3,17 +3,17 @@
 using namespace std;
 
 void Render::SetTitle() {
-	string Title = "ÎÒÂŞË¹·½¿éßÕ";
+	string Title = "æˆ‘ç½—æ–¯æ–¹å—å“’";
 	SetConsoleTitle(Title.c_str());
 }
 void Render::HideCursor() {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO CursorInfo;
-	GetConsoleCursorInfo(handle, &CursorInfo);//»ñÈ¡¿ØÖÆÌ¨¹â±êĞÅÏ¢
-	CursorInfo.bVisible = false; //Òş²Ø¿ØÖÆÌ¨¹â±ê
-	SetConsoleCursorInfo(handle, &CursorInfo);//ÉèÖÃ¿ØÖÆÌ¨¹â±ê×´Ì¬
+	GetConsoleCursorInfo(handle, &CursorInfo);//è·å–æ§åˆ¶å°å…‰æ ‡ä¿¡æ¯
+	CursorInfo.bVisible = false; //éšè—æ§åˆ¶å°å…‰æ ‡
+	SetConsoleCursorInfo(handle, &CursorInfo);//è®¾ç½®æ§åˆ¶å°å…‰æ ‡çŠ¶æ€
 }
-void SetPos(short i, short j)			//¿ØÖÆ¹â±êÎ»ÖÃ ÁĞ ĞĞ
+void SetPos(short i, short j)			//æ§åˆ¶å…‰æ ‡ä½ç½® åˆ— è¡Œ
 
 {
 
@@ -25,11 +25,11 @@ void SetPos(short i, short j)			//¿ØÖÆ¹â±êÎ»ÖÃ ÁĞ ĞĞ
 
 
 
-void Render::Welcome()	//ÓÎÏ·¸Õ½øÈ¥µÄ½çÃæ	
+void Render::Welcome()	//æ¸¸æˆåˆšè¿›å»çš„ç•Œé¢	
 
 {
 
-	SetColor(3);//ÉèÖÃÑÕÉ« 
+	SetColor(3);//è®¾ç½®é¢œè‰² 
 
 	char x;
 
@@ -39,23 +39,21 @@ void Render::Welcome()	//ÓÎÏ·¸Õ½øÈ¥µÄ½çÃæ
 
 		system("cls");
 
-		cout <<"		¶íÂŞË¹·½¿é		" << endl;
+		cout <<"		ä¿„ç½—æ–¯æ–¹å—		" << endl;
 
-		cout << "²Ù×÷·½Ê½£º" << endl;
+		cout << "æ“ä½œæ–¹å¼ï¼š" << endl;
 
-		cout <<"µ¥ÈË				Ë«ÈË"<<endl; 
+		cout <<"å•äºº				åŒäºº"<<endl; 
 
-		cout << "¡ü - Ğı×ª			w - Ğı×ª" << endl;
+		cout << "â†‘ - æ—‹è½¬			w - æ—‹è½¬" << endl;
 
-		cout << "¡ı - ¼ÓËÙÏÂÒÆ			s - ¼ÓËÙÏÂÒÆ"  << endl;
+		cout << "â†“ - åŠ é€Ÿä¸‹ç§»			s - åŠ é€Ÿä¸‹ç§»"  << endl;
 
-		cout << "¡û - ×óÒÆ			a - ×óÒÆ" << endl;
+		cout << "â† - å·¦ç§»			a - å·¦ç§»" << endl;
 
-		cout << "¡ú - ÓÒÒÆ			d - ÓÒÒÆ" << endl;
+		cout << "â†’ - å³ç§»			d - å³ç§»" << endl;
 
-		cout <<"°´1Ñ¡Ôñµ¥ÈËÄ£Ê½-°´2Ñ¡ÔñË«ÈËÄ£Ê½" << endl;
-
-		SetPos(20, 10);//¿ØÖÆ¹â±êÎ»ÖÃ£¬ ÁĞ£¬ ĞĞ
+		SetPos(20, 10);//æ§åˆ¶å…‰æ ‡ä½ç½®ï¼Œ åˆ—ï¼Œ è¡Œ
 
 		x = getchar();
 
@@ -63,7 +61,7 @@ void Render::Welcome()	//ÓÎÏ·¸Õ½øÈ¥µÄ½çÃæ
 
 		{
 
-			type = x - '0';//Ä£Ê½ 
+			type = x - '0';//æ¨¡å¼ 
 
 			break;
 
@@ -75,7 +73,7 @@ void Render::Welcome()	//ÓÎÏ·¸Õ½øÈ¥µÄ½çÃæ
 
 
 
-void Render::SetColor(int color_num)//ÉèÖÃÑÕÉ«
+void Render::SetColor(int color_num)//è®¾ç½®é¢œè‰²
 
 {
 
@@ -85,25 +83,25 @@ void Render::SetColor(int color_num)//ÉèÖÃÑÕÉ«
 
 	{
 
-		case 0: n = 0x08; break;//»ÒÉ«
+		case 0: n = 0x08; break;//ç°è‰²
 
-		case 1: n = 0x0C; break;//ºìÉ«
+		case 1: n = 0x0C; break;//çº¢è‰²
 
-		case 2: n = 0x0D; break;//×ÏÉ«
+		case 2: n = 0x0D; break;//ç´«è‰²
 
-		case 3: n = 0x0E; break;//»ÆÉ«
+		case 3: n = 0x0E; break;//é»„è‰²
 
-		case 4: n = 0x0A; break;//ÂÌÉ«
+		case 4: n = 0x0A; break;//ç»¿è‰²
 
-		case 5: n = 0x0F; break;//°×É«
+		case 5: n = 0x0F; break;//ç™½è‰²
 
-		case 6: n = 0x09; break;//À¶É«
+		case 6: n = 0x09; break;//è“è‰²
 
-		case 7: n = 0x0B; break;//µ­Ç³ÂÌÉ«
+		case 7: n = 0x0B; break;//æ·¡æµ…ç»¿è‰²
 
-		case 8: n = 0x05; break;//Éî×ÏÉ«
+		case 8: n = 0x05; break;//æ·±ç´«è‰²
 
-		case 9: n = 0x03; break;//Ç³ÂÌÉ«£¨ÓĞµãÀ¶£©
+		case 9: n = 0x03; break;//æµ…ç»¿è‰²ï¼ˆæœ‰ç‚¹è“ï¼‰
 
 	}
 
@@ -111,7 +109,7 @@ void Render::SetColor(int color_num)//ÉèÖÃÑÕÉ«
 
 }
 
-void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
+void Render::DrawMap1(int score)				//å•äººç”»æ¸¸æˆæ—¶ç•Œé¢
 
 {
 
@@ -125,11 +123,11 @@ void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(i * 2, 0);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 		SetPos(i * 2, 21);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
@@ -143,11 +141,11 @@ void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(0, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 		SetPos(11*2, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
@@ -161,11 +159,11 @@ void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(i * 2, 0);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(i * 2, 10);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
@@ -179,11 +177,11 @@ void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(32, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(60, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
@@ -191,11 +189,11 @@ void Render::DrawMap1(int score)				//µ¥ÈË»­ÓÎÏ·Ê±½çÃæ
 
 	SetPos(34, 2);
 
-	cout << "·ÖÊı: " << score; 
+	cout << "åˆ†æ•°: " << score; 
 
 	SetPos(34, 5);
 
-	cout << "ÏÂÒ»Í¼ĞÎ:";
+	cout << "ä¸‹ä¸€å›¾å½¢:";
 
  } 
 
@@ -205,12 +203,12 @@ void Render::DrawGame1(int Map[31][12], int BrickCol, const int *NextBrick) {
 			if (Map[i][j] == -1) {
 				SetColor(0);
 				SetPos(2 * j, (i - 10));
-				cout << "¡ö";
+				cout << "â– ";
 			}
 			else if (Map[i][j] == 1) {
 				SetColor(BrickCol);
 				SetPos(2 * j, (i - 10));
-				cout << "¡ö";
+				cout << "â– ";
 			} 
 		}
 	}
@@ -219,13 +217,13 @@ void Render::DrawGame1(int Map[31][12], int BrickCol, const int *NextBrick) {
 		int x = NextBrick[i] + 5;
 		int y = NextBrick[i + 1] + 21;
 		SetPos(2 * y, x);
-		cout << "¡ö";
+		cout << "â– ";
 	}
 }
 
 
-//-1²»ÄÜÒÆ¶¯µÄ·½¿é£¬0¿Õ£¬1ÕıÔÚÒÆ¶¯µÄ·½¿é£¬ 
-void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
+//-1ä¸èƒ½ç§»åŠ¨çš„æ–¹å—ï¼Œ0ç©ºï¼Œ1æ­£åœ¨ç§»åŠ¨çš„æ–¹å—ï¼Œ 
+void Render::DrawMap2(int score1, int score2)				//åŒäººç”»æ¸¸æˆæ—¶ç•Œé¢
 
 {
 
@@ -233,9 +231,9 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 	SetColor(0);
 
-//µÚÒ»¸ö¼Æ·ÖµÄÈË 
+//ç¬¬ä¸€ä¸ªè®¡åˆ†çš„äºº 
 
-	for(i = 0; i < 13; i++)		//¿í13¸ñ¼Æ·Ö 
+	for(i = 0; i < 13; i++)		//å®½13æ ¼è®¡åˆ† 
 
 	{
 
@@ -243,65 +241,65 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(i * 2, 0);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(i * 2, 10);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
 	
 
-	for(i = 0; i <= 10; i++)		//¸ß10¸ñ¼Æ·Ö 
+	for(i = 0; i <= 10; i++)		//é«˜10æ ¼è®¡åˆ† 
 
 	{
 
 		SetPos(0, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(13*2, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
-//µÚ¶ş¸öÈË¼Æ·ÖµÄÈË 
+//ç¬¬äºŒä¸ªäººè®¡åˆ†çš„äºº 
 
-	for(i = 43; i < 57; i++)		//¿í13¸ñ¼Æ·Ö 
+	for(i = 43; i < 57; i++)		//å®½13æ ¼è®¡åˆ† 
 
 	{
 
 		SetPos(i * 2, 0);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(i * 2, 10);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
 	
 
-	for(i = 0; i <= 10; i++)		//¸ß10¸ñ¼Æ·Ö 
+	for(i = 0; i <= 10; i++)		//é«˜10æ ¼è®¡åˆ† 
 
 	{
 
 		SetPos(43*2, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 		SetPos(57*2, i);
 
-		cout << "¡î";
+		cout << "â˜†";
 
 	}
 
-//µÚÒ»¸öÈËµÄ½çÃæ 
+//ç¬¬ä¸€ä¸ªäººçš„ç•Œé¢ 
 
-	for(i = 14; i < 25; i++)		//¿í13¸ñ¼Æ·Ö 
+	for(i = 14; i < 25; i++)		//å®½13æ ¼è®¡åˆ† 
 
 	{
 
@@ -309,11 +307,11 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(i * 2, 21);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
-	for(i = 0; i <= 21; i++)		//¸ß21¸ñ¼Æ·Ö 
+	for(i = 0; i <= 21; i++)		//é«˜21æ ¼è®¡åˆ† 
 
 	{
 
@@ -321,17 +319,17 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(50, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 		SetPos(28, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
-//µÚ¶ş¸öÈËµÄ½çÃæ 
+//ç¬¬äºŒä¸ªäººçš„ç•Œé¢ 
 
-	for(i = 30; i < 42; i++)		//¿í13¸ñ¼Æ·Ö 
+	for(i = 30; i < 42; i++)		//å®½13æ ¼è®¡åˆ† 
 
 	{
 
@@ -339,11 +337,11 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(i * 2, 21);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
-	for(i = 0; i <21; i++)		//¸ß21¸ñ¼Æ·Ö 
+	for(i = 0; i <21; i++)		//é«˜21æ ¼è®¡åˆ† 
 
 	{
 
@@ -351,11 +349,11 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 		SetPos(60, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 		SetPos(82, i);
 
-		cout << "¡ö";
+		cout << "â– ";
 
 	}
 
@@ -367,19 +365,19 @@ void Render::DrawMap2(int score1, int score2)				//Ë«ÈË»­ÓÎÏ·Ê±½çÃæ
 
 	SetPos(2, 2);
 
-	cout << "·ÖÊı: " << score1; 
+	cout << "åˆ†æ•°: " << score1; 
 
 	SetPos(2, 5);
 
-	cout << "ÏÂÒ»Í¼ĞÎ:";
+	cout << "ä¸‹ä¸€å›¾å½¢:";
 
 	SetPos(88, 2);
 
-	cout << "·ÖÊı: " << score2; 
+	cout << "åˆ†æ•°: " << score2; 
 
 	SetPos(88, 5);
 
-	cout << "ÏÂÒ»Í¼ĞÎ:";
+	cout << "ä¸‹ä¸€å›¾å½¢:";
 
 } 
 
