@@ -68,23 +68,89 @@ void Game::welcome() {
 }
 
 void Game::renderMap() {
-	int Map[32][12] = { 0 }, Infor[9] = { 0 };
-	for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-		Infor[i] = *NextState;
-	const int* Pnt = player[0]->NowBrick.getInformation();
-	if (!player[0]->GameOver) {
-		for (int i = 1; i <= 30; i++)
-			for (int j = 1; j <= 10; j++)
-				if (player[0]->MapSqure[i][j])
-					Map[i][j] = -1;
-		for (int i = 1; i < 9; i += 2)
-			Map[Pnt[i]][Pnt[i + 1]] = 1;
-	}
-	else
-		Infor[0] = 5;
+	if (CountPlayer == 1) {
+		int Map[32][12] = { 0 }, Infor[9] = { 0 };
+		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+			Infor[i] = *NextState;
+		const int* Pnt = player[0]->NowBrick.getInformation();
+		if (!player[0]->GameOver) {
+			for (int i = 1; i <= 30; i++)
+				for (int j = 1; j <= 10; j++)
+					if (player[0]->MapSqure[i][j])
+						Map[i][j] = -1;
+			for (int i = 1; i < 9; i += 2)
+				Map[Pnt[i]][Pnt[i + 1]] = 1;
+		}
+		else
+			Infor[0] = 5;
 
-	render.DrawMap1(player[0]->CountScore);
-	render.DrawGame1(Map, Pnt[0],Infor);
+		render.DrawMap1(player[0]->CountScore);
+		render.DrawGame1(Map, Pnt[0], Infor);
+		return;
+	}
+	if (CountPlayer == 2) {
+		int Map1[32][12] = { 0 }, Infor1[9] = { 0 };
+		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+			Infor1[i] = *NextState;
+		const int* Pnt = player[0]->NowBrick.getInformation();
+		if (!player[0]->GameOver) {
+			for (int i = 1; i <= 30; i++)
+				for (int j = 1; j <= 10; j++)
+					if (player[0]->MapSqure[i][j])
+						Map1[i][j] = -1;
+			for (int i = 1; i < 9; i += 2)
+				Map1[Pnt[i]][Pnt[i + 1]] = 1;
+		}
+		else
+			Infor1[0] = 10;
+
+
+		int Map2[32][12] = { 0 }, Infor2[9] = { 0 };
+		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+			Infor2[i] = *NextState;
+		Pnt = player[1]->NowBrick.getInformation();
+		if (!player[1]->GameOver) {
+			for (int i = 1; i <= 30; i++)
+				for (int j = 1; j <= 10; j++)
+					if (player[1]->MapSqure[i][j])
+						Map2[i][j] = -1;
+			for (int i = 1; i < 9; i += 2)
+				Map2[Pnt[i]][Pnt[i + 1]] = 1;
+		}
+		else
+			Infor2[0] = 10;
+
+		system("cls");
+		std::cout << ' ';
+		for (int j = 1; j <= 10; j++) std::cout << '-';
+		std::cout << ' ';
+		for (int j = 1; j <= 10; j++) std::cout << '-';
+		std::cout << ' ';
+		std::cout << std::endl;
+		for (int i = 11; i <= 30; i++) {
+			std::cout << '|';
+			for (int j = 1; j <= 10; j++)
+				if (0);
+				else if (Map1[i][j] == 0) std::cout << ' ';
+				else if (Map1[i][j] < 0) std::cout << 'o';
+				else if (Map1[i][j] > 0) std::cout << '*';
+			std::cout << '|';
+			for (int j = 1; j <= 10; j++)
+				if (0);
+				else if (Map2[i][j] == 0) std::cout << ' ';
+				else if (Map2[i][j] < 0) std::cout << 'o';
+				else if (Map2[i][j] > 0) std::cout << '*';
+			std::cout << '|';
+			std::cout << std::endl;
+		}
+		std::cout << ' ';
+		for (int j = 1; j <= 10; j++) std::cout << '-';
+		std::cout << ' ';
+		for (int j = 1; j <= 10; j++) std::cout << '-';
+		std::cout << ' ';
+		std::cout << std::endl;
+		return;
+	}
 }
 
 void Game::moveCur(int& NowCur, char Command) {
