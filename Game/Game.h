@@ -11,14 +11,15 @@ private:
 	static int FramesCount, FramesTime;
 	static const char ESC, LEFT, RIGHT, UP, DOWN, DIRECTIONS, ENTER;
 
-	void welcome();
+	void explain();
+	void participants();
+	bool welcome();
 	void carryCommand(char);
-	void GameModeMenu(int);
-	void setGameMode();
-	bool play();
+	void setGameMode(int);
+	int play();
 	void addOtherLines(int,int);
 	void moveCur(int&,char);
-	void helpText(int GameMode);
+	void helpText();
 
 public:	
 	Game();	
