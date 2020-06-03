@@ -100,14 +100,14 @@ void Game::renderMap() {
 					if (player[0]->MapSqure[i][j])
 						Map1[i][j] = -1;
 			for (int i = 1; i < 9; i += 2)
-				Map1[Pnt[i]][Pnt[i + 1]] = 1;
+				Map1[Pnt[i]][Pnt[i + 1]] = Pnt[0];
 		}
 		else
 			Infor1[0] = 10;
 
 
 		int Map2[32][12] = { 0 }, Infor2[9] = { 0 };
-		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+		for (int* NextState = player[1]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
 			Infor2[i] = *NextState;
 		Pnt = player[1]->NowBrick.getInformation();
 		if (!player[1]->GameOver) {
@@ -116,40 +116,13 @@ void Game::renderMap() {
 					if (player[1]->MapSqure[i][j])
 						Map2[i][j] = -1;
 			for (int i = 1; i < 9; i += 2)
-				Map2[Pnt[i]][Pnt[i + 1]] = 1;
+				Map2[Pnt[i]][Pnt[i + 1]] = Pnt[0];
 		}
 		else
 			Infor2[0] = 10;
 
-		system("cls");
-		std::cout << ' ';
-		for (int j = 1; j <= 10; j++) std::cout << '-';
-		std::cout << ' ';
-		for (int j = 1; j <= 10; j++) std::cout << '-';
-		std::cout << ' ';
-		std::cout << std::endl;
-		for (int i = 11; i <= 30; i++) {
-			std::cout << '|';
-			for (int j = 1; j <= 10; j++)
-				if (0);
-				else if (Map1[i][j] == 0) std::cout << ' ';
-				else if (Map1[i][j] < 0) std::cout << 'o';
-				else if (Map1[i][j] > 0) std::cout << '*';
-			std::cout << '|';
-			for (int j = 1; j <= 10; j++)
-				if (0);
-				else if (Map2[i][j] == 0) std::cout << ' ';
-				else if (Map2[i][j] < 0) std::cout << 'o';
-				else if (Map2[i][j] > 0) std::cout << '*';
-			std::cout << '|';
-			std::cout << std::endl;
-		}
-		std::cout << ' ';
-		for (int j = 1; j <= 10; j++) std::cout << '-';
-		std::cout << ' ';
-		for (int j = 1; j <= 10; j++) std::cout << '-';
-		std::cout << ' ';
-		std::cout << std::endl;
+		render.DrawMap2(player[0]->getScore(), player[1]->getScore());
+		render.DrawGame2(Map1, Infor1, Map2, Infor2);
 		return;
 	}
 }
@@ -263,6 +236,12 @@ void Game::carryCommand(char c) {
 	/*
 	It is setted just make the code more symmetrical.
 	*/
+	else if (c == 0) {
+		CountDeleteLines = player[0]->run(0);
+		addOtherLines(0, CountDeleteLines);
+		CountDeleteLines = player[1]->run(0);
+		addOtherLines(1, CountDeleteLines);
+	}
 	else if (c == UP || c == 'W' || c == 'w') {
 		/*
 		It will act on the first player if there are one player, or the command isn't direction key "up".
@@ -348,6 +327,7 @@ bool Game::play() {
 		}
 	}
 
+	system("cls");
 	int FramesLimit = 1000 / FramesTime;
 	/*
 	Number FramesLimit is setted as the limits of FramesCount.
@@ -377,9 +357,7 @@ bool Game::play() {
 			/*
 			It is time to make the bricks fall down.
 			*/
-			player[0]->run(0);
-			if(CountPlayer==2)
-				player[1]->run(0);
+			carryCommand(0);
 			Game::FramesCount -= FramesLimit;
 
 			if (GameMode == 1 || GameMode == 3 || GameMode == 5 || GameMode == 7)
