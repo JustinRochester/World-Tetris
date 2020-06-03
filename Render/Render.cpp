@@ -452,7 +452,7 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 	}
 	//player2's next brick 	
 	//43,5 
-	for (int i = 48; i <= 51; ++i) {
+	for (int i = 48; i <= 53; ++i) {
 		for (int j = 6; j <= 9; ++j) {
 			SetPos(2 * i, j);
 			cout << "  ";
