@@ -319,6 +319,10 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 	{
 
 		SetColor(5);
+		
+		SetPos(i * 2, 0);
+		
+		cout << "■";		
 
 		SetPos(i * 2, 21);
 
@@ -349,6 +353,11 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 	{
 
 		SetColor(5);
+		
+		SetPos(i * 2, 0);
+		
+		cout << "■";
+		
 
 		SetPos(i * 2, 21);
 
@@ -374,7 +383,7 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 
 
-	SetColor(3);
+	SetColor(5);
 
 	//Input_score();
 
@@ -394,6 +403,68 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 	cout << "下一图形:";
 
+} 
+
+/*Map1 begin (15, 1)
+  Map2 begin (31, 1)
+*/
+void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const int *B2) {
+	//player1's map
+	for (int i = 11; i <= 30; ++i) {
+		for (int j = 1; j <= 10; ++j) {
+			if (Map1[i][j] == -1)
+				SetColor(0);
+			else if (Map1[i][j] == 0)
+				SetColor(10);
+			else
+				SetColor(Map1[i][j]);
+			SetPos(2 * (j + 14), i - 10);
+			cout << "■";
+		}
+	}
+	//player2's map
+	for (int i = 11; i <= 30; ++i) {
+		for (int j = 1; j <= 10; ++j) {
+			if (Map2[i][j] == -1)
+				SetColor(0);
+			else if (Map2[i][j] == 0)
+				SetColor(10);
+			else
+				SetColor(Map2[i][j]);
+			SetPos(2 * (j + 30), i - 10);
+			cout << "■";
+		}
+	}
+	//player1's next brick
+	//7,5
+	for (int i = 6; i <= 9; ++i) {
+		for (int j = 6; j <= 9; ++j) {
+			SetPos(2 * i, j);
+			cout << "  ";
+		}
+	}
+	SetColor(B1[0]);
+	for (int i = 1; i <= 7; i += 2) {
+		int x = B1[i] + 5;
+		int y = B1[i + 1] + 5;
+		SetPos(2 * y, x);
+		cout << "■";
+	}
+	//player2's next brick 	
+	//43,5 
+	for (int i = 48; i <= 51; ++i) {
+		for (int j = 6; j <= 9; ++j) {
+			SetPos(2 * i, j);
+			cout << "  ";
+		}
+	}
+	SetColor(B2[0]);
+	for (int i = 1; i <= 7; i += 2) {
+		int x = B2[i] + 5;
+		int y = B2[i + 1] + 48;
+		SetPos(2 * y, x);
+		cout << "■";
+	}
 } 
 
 
