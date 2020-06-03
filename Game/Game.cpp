@@ -225,6 +225,7 @@ void Game::addOtherLines(int DeleteLinePlayer, int CountDeletedLine) {
 }
 
 void Game::carryCommand(char c) {
+	static int Turn = 0;
 	/*
 	This method is used to carry the correct command 'c'.
 	Surely, it won't work if the command is not defined.
@@ -237,10 +238,11 @@ void Game::carryCommand(char c) {
 	It is setted just make the code more symmetrical.
 	*/
 	else if (c == 0) {
-		CountDeleteLines = player[0]->run(0);
-		addOtherLines(0, CountDeleteLines);
-		CountDeleteLines = player[1]->run(0);
-		addOtherLines(1, CountDeleteLines);
+		CountDeleteLines = player[Turn]->run(0);
+		addOtherLines(Turn, CountDeleteLines);
+		Turn ^= 1;
+		CountDeleteLines = player[Turn]->run(0);
+		addOtherLines(Turn, CountDeleteLines);
 	}
 	else if (c == UP || c == 'W' || c == 'w') {
 		/*

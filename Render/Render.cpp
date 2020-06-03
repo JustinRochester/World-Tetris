@@ -420,11 +420,6 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 				SetColor(Map1[i][j]);
 			SetPos(2 * (j + 14), i - 10);
 			cout << "¡ö";
-		}
-	}
-	//player2's map
-	for (int i = 11; i <= 30; ++i) {
-		for (int j = 1; j <= 10; ++j) {
 			if (Map2[i][j] == -1)
 				SetColor(0);
 			else if (Map2[i][j] == 0)
@@ -435,6 +430,7 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 			cout << "¡ö";
 		}
 	}
+
 	//player1's next brick
 	//7,5
 	for (int i = 6; i <= 9; ++i) {
