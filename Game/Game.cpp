@@ -87,61 +87,34 @@ bool Game::welcome() {
 }
 
 void Game::renderMap() {
-	if (CountPlayer == 1) {
-		int Map[32][12] = { 0 }, Infor[9] = { 0 };
-		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-			Infor[i] = *NextState;
-		const int* Pnt = player[0]->NowBrick.getInformation();
-		if (!player[0]->GameOver) {
-			for (int i = 1; i <= 30; i++)
-				for (int j = 1; j <= 10; j++)
-					if (player[0]->MapSqure[i][j])
-						Map[i][j] = -1;
-			for (int i = 1; i < 9; i += 2)
-				Map[Pnt[i]][Pnt[i + 1]] = 1;
-		}
-		else
-			Infor[0] = 5;
-
-		render.DrawMap1(player[0]->CountScore);
-		render.DrawGame1(Map, Pnt[0], Infor);
+	/*
+	This method is used to draw the game map.
+	*/
+	int Map[2][32][12] = { 0 }, Infor[2][9] = { 0 };
+	if (CountPlayer == 0)
 		return;
+	for (int p = 0; p < CountPlayer; p++) {
+		for (int* NextState = player[p]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+			Infor[p][i] = *NextState;
+		if (player[p]->GameOver) {
+			Infor[p][0] = 10;
+			continue;
+		}
+		for (int i = 1; i <= 30; i++)
+			for (int j = 1; j <= 10; j++)
+				if (player[p]->MapSqure[i][j])
+					Map[p][i][j] = -1;
+		for (int* Pnt = player[p]->NowBrick.getInformation(), i = 1; i < 9; i += 2)
+			Map[p][Pnt[i]][Pnt[i + 1]] = Pnt[0];
 	}
-	if (CountPlayer == 2) {
-		int Map1[32][12] = { 0 }, Infor1[9] = { 0 };
-		for (int* NextState = player[0]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-			Infor1[i] = *NextState;
-		const int* Pnt = player[0]->NowBrick.getInformation();
-		if (!player[0]->GameOver) {
-			for (int i = 1; i <= 30; i++)
-				for (int j = 1; j <= 10; j++)
-					if (player[0]->MapSqure[i][j])
-						Map1[i][j] = -1;
-			for (int i = 1; i < 9; i += 2)
-				Map1[Pnt[i]][Pnt[i + 1]] = Pnt[0];
-		}
-		else
-			Infor1[0] = 10;
-
-
-		int Map2[32][12] = { 0 }, Infor2[9] = { 0 };
-		for (int* NextState = player[1]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-			Infor2[i] = *NextState;
-		Pnt = player[1]->NowBrick.getInformation();
-		if (!player[1]->GameOver) {
-			for (int i = 1; i <= 30; i++)
-				for (int j = 1; j <= 10; j++)
-					if (player[1]->MapSqure[i][j])
-						Map2[i][j] = -1;
-			for (int i = 1; i < 9; i += 2)
-				Map2[Pnt[i]][Pnt[i + 1]] = Pnt[0];
-		}
-		else
-			Infor2[0] = 10;
-
-		render.DrawMap2(player[0]->getScore(), player[1]->getScore());
-		render.DrawGame2(Map1, Infor1, Map2, Infor2);
-		return;
+	if (0);
+	else if (CountPlayer == 1) {
+		render.DrawMap1(player[0]->CountScore);
+		render.DrawGame1(Map[0], Infor[0]);
+	}
+	else if (CountPlayer == 2) {
+		render.DrawMap2(player[0]->CountScore, player[1]->CountScore);
+		render.DrawGame2(Map[0], Infor[0], Map[1], Infor[1]);
 	}
 }
 
@@ -163,6 +136,10 @@ void Game::moveCur(int& NowCur, char Command) {
 }
 
 void Game::setGameMode(int Cur) {
+	/*
+	This method is used to choose the game mode.
+	It will choose the game mode Cur if the Cur is no less than 0, which means restart this game mode.
+	*/
 
 	for (int i = 0; i < 2; i++)
 		if (player[i] != NULL) {
@@ -279,22 +256,17 @@ void Game::carryCommand(char c) {
 	}
 }
 
-int Game::play() {
-	/*
-	This method is used to carry the World-Teris game circularly.
-	It will return that whether the game is started.
-	*/
-
+int Game::preStart() {
 	int Cur = 0;
 	while (1) {
 		render.PreStart(Cur);
 		char c = _getch();
-		if (c == ESC) 
+		if (c == ESC)
 			return 1;
 		if (c == ENTER) {
 			if (0);
 			else if (Cur == 0)
-				break;
+				return 0;
 			else if (Cur == 1) {
 				helpText();
 				continue;
@@ -309,6 +281,32 @@ int Game::play() {
 			Cur = (Cur % 4 + 4) % 4;
 		}
 	}
+}
+
+int Game::End() {
+	render.SetColor(5);
+	int Cur = 0;
+	while (1) {
+		render.End(Cur, CountPlayer, player[0]->getName(), player[0]->getScore(), player[1]->getName(), player[1]->getScore());
+		char c = _getch();
+		if (c == ESC)
+			return 1;
+		if (c == ENTER)
+			return Cur;
+		moveCur(Cur, c);
+		Cur = (Cur % 4 + 4) % 4;
+	}
+}
+
+int Game::play() {
+	/*
+	This method is used to carry the World-Teris game circularly.
+	It will return that whether the game is started.
+	*/
+
+	int Res = preStart();
+	if (Res != 0)
+		return Res;
 
 	system("cls");
 	int FramesLimit = 1000 / FramesTime;
@@ -373,18 +371,7 @@ int Game::play() {
 		*/
 	}
 
-	render.SetColor(5);
-	Cur = 0;
-	while (1) {
-		render.End(Cur, CountPlayer, player[0]->getName(), player[0]->getScore(), player[1]->getName(), player[1]->getScore());
-		char c = _getch();
-		if (c == ESC)
-			return 1;
-		if (c == ENTER)
-			return Cur;
-		moveCur(Cur, c);
-		Cur = (Cur % 4 + 4) % 4;
-	}
+	return End();
 }
 void Game::run() {
 	while (1) {

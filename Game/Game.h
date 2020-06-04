@@ -14,12 +14,15 @@ private:
 	void explain();
 	void participants();
 	bool welcome();
-	void carryCommand(char);
 	void setGameMode(int);
+	void helpText();
+	int preStart();
+	int End();
+
+	void carryCommand(char);
 	int play();
 	void addOtherLines(int,int);
 	void moveCur(int&,char);
-	void helpText();
 
 public:	
 	Game();	

@@ -382,7 +382,7 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
  } 
 
-void Render::DrawGame1(int Map[32][12], int BrickCol, const int* NextBrick) {
+void Render::DrawGame1(int Map[32][12], const int* NextBrick) {
 	for (int i = 11; i <= 30; ++i) {
 		for (int j = 1; j <= 10; ++j) {
 			if (Map[i][j] == -1) {
@@ -390,8 +390,8 @@ void Render::DrawGame1(int Map[32][12], int BrickCol, const int* NextBrick) {
 				SetPos(2 * j, (i - 10));
 				cout << "■";
 			}
-			else if (Map[i][j] == 1) {
-				SetColor(BrickCol);
+			else if (Map[i][j] > 0) {
+				SetColor(Map[i][j]);
 				SetPos(2 * j, (i - 10));
 				cout << "■";
 			}
