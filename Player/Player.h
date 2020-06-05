@@ -21,9 +21,6 @@ private:
 	int delLine();
 	void renewBrick();
 	friend void Game::renderMap();
-#ifdef DEBUG
-	friend void display(Player &p);
-#endif
 
 public:
 	bool IsGameOver();

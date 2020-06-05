@@ -47,23 +47,23 @@ void Render::Explain()
 {
 	system("cls");
 	SetColor(5);
-	cout << "_______________________" << endl;
-	cout << "                       o" << endl;
-	cout << "单人模式  操作方法     o" << endl;
-	cout << "↑& w - 旋转            o" << endl;
-	cout << "↓& s - 加速下移        o" << endl;
-	cout << "←& a - 左移           o" << endl;
-	cout << "→& d - 右移           o" << endl;
-	cout << "_______________________o" << endl;
+	cout << "_________________________" << endl;
+	cout << "\t\t\to" << endl;
+	cout << "  单人模式  操作方法\to" << endl;
+	cout << "  ↑& w - 旋转\t\to" << endl;
+	cout << "  ↓& s - 加速下移\to" << endl;
+	cout << "  ←& a - 左移\t\to" << endl;
+	cout << "  →& d - 右移\t\to" << endl;
+	cout << "________________________o" << endl;
 	cout << endl;
-	cout << "_______________________________" << endl;
-	cout << "                              o" << endl;
-	cout << "双人模式 操作方法             o" << endl;
-	cout << "↑ - 旋转	w - 旋转      o" << endl;
-	cout << "↓ - 加速下移	s - 加速下移  o" << endl;
-	cout << "← - 左移	a - 左移      o" << endl;
-	cout << "→ - 右移	d - 右移      o" << endl;
-	cout << "______________________________o" << endl;
+	cout << "_________________________________" << endl;
+	cout << "\t\t\t\to" << endl;
+	cout << "  双人模式 操作方法\t\to" << endl;
+	cout << "  ↑ - 旋转	w - 旋转\to" << endl;
+	cout << "  ↓ - 加速下移	s - 加速下移\to" << endl;
+	cout << "  → - 右移	d - 右移\to" << endl;
+	cout << "  ← - 左移	a - 左移\to" << endl;
+	cout << "________________________________o" << endl;
 	cout << endl;
 	cout << endl;
 	cout << ">> ^返回^" << endl;
@@ -146,13 +146,14 @@ void Render::helpText(int GameMode)
 {
 	system("cls");
 	SetColor(5);
-	cout << "当你们看见方块掉落时，什么都不要干，就这么看着它。" << endl;
+	cout << endl;
+	cout << "  当你们看见方块掉落时，什么都不要干，就这么看着它。" << endl;
 
-	cout << "谁先顶到天花板，谁就赢了。" << endl;
+	cout << "  谁先顶到天花板，谁就赢了。" << endl;
 
 	cout << endl;
 
-	cout << "如果你们乱动方块，会把填满的行消掉。我们会记录你们的分数：" << endl;
+	cout << "  如果你们乱动方块，会把填满的行消掉。我们会记录你们的分数：" << endl;
 
 	cout << "\t消除 1 行，记录 10 分" << endl;
 
@@ -166,7 +167,7 @@ void Render::helpText(int GameMode)
 
 	if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
 
-		cout << "为了让你消行了还能顶到天花板，每加 10 分，方块下落会变快一次，直至上限" << endl;
+		cout << "  为了让你消行了还能顶到天花板，每加 10 分，方块下落会变快一次，直至上限" << endl;
 
 		cout << endl;
 
@@ -174,7 +175,7 @@ void Render::helpText(int GameMode)
 
 	if (GameMode == 8 || GameMode == 9) {
 
-		cout << "同时，为了方便你的朋友顶到天花板。你每次消除一行，你的朋友就会增加一行" << endl;
+		cout << "  同时，为了方便你的朋友顶到天花板。你每次消除一行，你的朋友就会增加一行" << endl;
 
 		cout << endl;
 
@@ -182,7 +183,7 @@ void Render::helpText(int GameMode)
 
 	if (GameMode == 1 || GameMode == 3 || GameMode == 5 || GameMode == 7) {
 
-		cout << "为了方便你们顶到天花板，每次方块下落有 1% 的概率触发加行 buff :" << endl;
+		cout << "  为了方便你们顶到天花板，每次方块下落有 1% 的概率触发加行 buff :" << endl;
 
 		cout << "\t其中有 40% 的概率增加 1 行" << endl;
 
@@ -225,7 +226,7 @@ void Render::End(int Cur, int num, const string& player1, int score1, const stri
 	system("cls");
 	cout << endl;
 	SetColor(3);
-	cout << "游戏已经结束" << endl;
+	cout << "   游戏已经结束" << endl;
 	cout << endl;
 	SetColor(5);
 	cout << "   " << player1 << ":" << score1 << endl;
