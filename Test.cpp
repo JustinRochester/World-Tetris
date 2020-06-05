@@ -3,6 +3,7 @@
 #include<ctime>
 #include<cstdlib>
 #include<Windows.h>
+#include<iostream>
 using namespace std;
 Game* g;
 int main() {

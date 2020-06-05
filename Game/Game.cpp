@@ -86,37 +86,39 @@ bool Game::welcome() {
 	}
 }
 
-
 void Game::renderMap() {
 	/*
 	This method is used to draw the game map.
 	*/
-	int Map[2][32][12] = { 0 }, Infor[2][9] = { 0 };
+	int Map[2][32][12] = { 0 }, Infor1[2][9] = { 0 }, Infor2[2][9] = { 0 };
 	if (CountPlayer == 0)
 		return;
 	for (int p = 0; p < CountPlayer; p++) {
+		for (int* NowState = player[p]->NowBrick.getInformation(), i = 0; i < 9; i++, NowState++)
+			Infor1[p][i] = *NowState;
 		for (int* NextState = player[p]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-			Infor[p][i] = *NextState;
+			Infor2[p][i] = *NextState;
+
 		if (player[p]->GameOver) {
-			Infor[p][0] = 10;
+			Infor1[p][0] = 10;
+			Infor2[p][0] = 10;
 			continue;
 		}
+
 		for (int i = 1; i <= 30; i++)
 			for (int j = 1; j <= 10; j++)
 				if (player[p]->MapSqure[i][j])
 					Map[p][i][j] = -1;
-		for (int* Pnt = player[p]->NowBrick.getInformation(), i = 1; i < 9; i += 2)
-			Map[p][Pnt[i]][Pnt[i + 1]] = Pnt[0];
 	}
 
 	if (0);
 	else if (CountPlayer == 1) {
-		render.DrawMap1(player[0]->CountScore);
-		render.DrawGame1(Map[0], Infor[0]);
+		render.DrawScore1(player[0]->CountScore);
+		render.DrawGame1(Map[0], Infor1[0], Infor2[0]);
 	}
 	else if (CountPlayer == 2) {
-		render.DrawMap2(player[0]->CountScore, player[1]->CountScore);
-		render.DrawGame2(Map[0], Infor[0], Map[1], Infor[1]);
+		render.DrawScore2(player[0]->CountScore, player[1]->CountScore);
+		render.DrawGame2(Map[0], Infor1[0], Infor2[0], Map[1], Infor1[1], Infor2[1]);
 	}
 }
 
@@ -317,6 +319,7 @@ int Game::play() {
 	*/
 	player[0]->setName("Íæ¼Ò1");
 	player[1]->setName("Íæ¼Ò2");
+	render.DrawGameMap(CountPlayer);
 	renderMap();
 	for (clock_t last = clock(), now = last;; now = clock()) {
 		if (Game::FramesCount >= FramesLimit) {
@@ -366,6 +369,9 @@ int Game::play() {
 		To render the map.
 		*/
 	}
+
+	while (_kbhit())
+		_getch();
 
 	return End();
 }
