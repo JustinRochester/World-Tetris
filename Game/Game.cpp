@@ -86,6 +86,7 @@ bool Game::welcome() {
 	}
 }
 
+
 void Game::renderMap() {
 	/*
 	This method is used to draw the game map.
@@ -107,6 +108,7 @@ void Game::renderMap() {
 		for (int* Pnt = player[p]->NowBrick.getInformation(), i = 1; i < 9; i += 2)
 			Map[p][Pnt[i]][Pnt[i + 1]] = Pnt[0];
 	}
+
 	if (0);
 	else if (CountPlayer == 1) {
 		render.DrawMap1(player[0]->CountScore);
@@ -303,7 +305,6 @@ int Game::play() {
 	This method is used to carry the World-Teris game circularly.
 	It will return that whether the game is started.
 	*/
-
 	int Res = preStart();
 	if (Res != 0)
 		return Res;
@@ -318,22 +319,6 @@ int Game::play() {
 	player[1]->setName("Íæ¼Ò2");
 	renderMap();
 	for (clock_t last = clock(), now = last;; now = clock()) {
-		if (_kbhit()) {
-			clock_t LastTime = clock();
-			char c = _getch();
-			if (c == ESC)
-				break;
-			carryCommand(c);
-			renderMap();
-			LastTime = clock()-LastTime;
-			if(Game::FramesTime>LastTime)
-				Sleep(Game::FramesTime - LastTime);
-		}
-		else {
-			Sleep(Game::FramesTime);
-		}
-		Game::FramesCount++;
-
 		if (Game::FramesCount >= FramesLimit) {
 			/*
 			It is time to make the bricks fall down.
@@ -355,8 +340,19 @@ int Game::play() {
 						player[i]->addLine(CountAddLines);
 					}
 
-			renderMap();
 		}
+		clock_t LastTime = clock();
+		if (_kbhit()) {
+			char c = _getch();
+			if (c == ESC)
+				break;
+			carryCommand(c);
+		}
+		LastTime = clock()-LastTime;
+		if(Game::FramesTime>LastTime)
+			Sleep(Game::FramesTime - LastTime);
+		renderMap();
+		Game::FramesCount++;
 
 		if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
 			FramesLimit = 1000 / FramesTime - (player[0]->getScore() + player[1]->getScore()) / 10;

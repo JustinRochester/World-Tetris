@@ -301,7 +301,7 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
 	int i;
 
-	for(i = 0; i <= 10; i++)	
+	for (i = 0; i <= 10; i++)
 
 	{
 
@@ -309,17 +309,17 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
 		SetPos(i * 2, 0);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 		SetPos(i * 2, 21);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
-	
 
-	for(i = 0; i <= 21; i++) 
+
+	for (i = 0; i <= 21; i++)
 
 	{
 
@@ -327,17 +327,17 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
 		SetPos(0, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
-		SetPos(11*2, i);
+		SetPos(11 * 2, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
-	
 
-	for(i = 16; i < 30; i++)		
+
+	for (i = 16; i < 30; i++)
 
 	{
 
@@ -345,17 +345,17 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
 		SetPos(i * 2, 0);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 		SetPos(i * 2, 10);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-	
 
-	for(i = 0; i <= 10; i++)	
+
+	for (i = 0; i <= 10; i++)
 
 	{
 
@@ -363,25 +363,25 @@ void Render::DrawMap1(int score)				//单人画游戏时界面
 
 		SetPos(32, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 		SetPos(60, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-	
+
 
 	SetPos(34, 2);
 
-	cout << "分数: " << score; 
+	printf("分数：%d", score);
 
 	SetPos(34, 5);
 
-	cout << "下一图形:";
+	printf("下一图形：");
 
- } 
+}
 
 void Render::DrawGame1(int Map[32][12], const int* NextBrick) {
 	for (int i = 11; i <= 30; ++i) {
@@ -389,23 +389,23 @@ void Render::DrawGame1(int Map[32][12], const int* NextBrick) {
 			if (Map[i][j] == -1) {
 				SetColor(0);
 				SetPos(2 * j, (i - 10));
-				cout << "■";
+				fwrite("■", 1, 2, stdout);
 			}
 			else if (Map[i][j] > 0) {
 				SetColor(Map[i][j]);
 				SetPos(2 * j, (i - 10));
-				cout << "■";
+				fwrite("■", 1, 2, stdout);
 			}
 			else {
 				SetPos(2 * j, i - 10);
-				cout << "  ";
+				fwrite("  ", 1, 2, stdout);
 			}
 		}
 	}
 	for (int i = 22; i <= 26; ++i) {
 		for (int j = 6; j <= 9; ++j) {
 			SetPos(2 * i, j);
-			cout << "  ";
+			fwrite("  ", 1, 2, stdout);
 		}
 	}
 	SetColor(NextBrick[0]);
@@ -413,7 +413,7 @@ void Render::DrawGame1(int Map[32][12], const int* NextBrick) {
 		int x = NextBrick[i] + 5;
 		int y = NextBrick[i + 1] + 21;
 		SetPos(2 * y, x);
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 	}
 
 }
@@ -429,9 +429,9 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 	SetColor(0);
 
-//第一个计分的人 
+	//第一个计分的人 
 
-	for(i = 0; i < 13; i++)		//宽13格计分 
+	for (i = 0; i < 13; i++)		//宽13格计分 
 
 	{
 
@@ -439,81 +439,81 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 		SetPos(i * 2, 0);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 		SetPos(i * 2, 10);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-	
 
-	for(i = 0; i <= 10; i++)		//高10格计分 
+
+	for (i = 0; i <= 10; i++)		//高10格计分 
 
 	{
 
 		SetPos(0, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
-		SetPos(13*2, i);
+		SetPos(13 * 2, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-//第二个人计分的人 
+	//第二个人计分的人 
 
-	for(i = 43; i < 57; i++)		//宽13格计分 
+	for (i = 43; i < 57; i++)		//宽13格计分 
 
 	{
 
 		SetPos(i * 2, 0);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 		SetPos(i * 2, 10);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-	
 
-	for(i = 0; i <= 10; i++)		//高10格计分 
+
+	for (i = 0; i <= 10; i++)		//高10格计分 
 
 	{
 
-		SetPos(43*2, i);
+		SetPos(43 * 2, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
-		SetPos(57*2, i);
+		SetPos(57 * 2, i);
 
-		cout << "☆";
+		fwrite("☆", 1, 2, stdout);
 
 	}
 
-//第一个人的界面 
+	//第一个人的界面 
 
-	for(i = 14; i < 25; i++)		//宽13格计分 
+	for (i = 14; i < 25; i++)		//宽13格计分 
 
 	{
 
 		SetColor(5);
-		
+
 		SetPos(i * 2, 0);
-		
-		cout << "■";		
+
+		fwrite("■", 1, 2, stdout);
 
 		SetPos(i * 2, 21);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
-	for(i = 0; i <= 21; i++)		//高21格计分 
+	for (i = 0; i <= 21; i++)		//高21格计分 
 
 	{
 
@@ -521,34 +521,34 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 		SetPos(50, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 		SetPos(28, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
-//第二个人的界面 
+	//第二个人的界面 
 
-	for(i = 30; i < 42; i++)		//宽13格计分 
+	for (i = 30; i < 42; i++)		//宽13格计分 
 
 	{
 
 		SetColor(5);
-		
+
 		SetPos(i * 2, 0);
-		
-		cout << "■";
-		
+
+		fwrite("■", 1, 2, stdout);
+
 
 		SetPos(i * 2, 21);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
-	for(i = 0; i <21; i++)		//高21格计分 
+	for (i = 0; i < 21; i++)		//高21格计分 
 
 	{
 
@@ -556,11 +556,11 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 		SetPos(60, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 		SetPos(82, i);
 
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 
 	}
 
@@ -572,26 +572,26 @@ void Render::DrawMap2(int score1, int score2)				//双人画游戏时界面
 
 	SetPos(2, 2);
 
-	cout << "分数: " << score1; 
+	printf("分数：%d", score1);
 
 	SetPos(2, 5);
 
-	cout << "下一图形:";
+	printf("下一图形：");
 
 	SetPos(88, 2);
 
-	cout << "分数: " << score2; 
+	printf("分数：%d", score2);
 
 	SetPos(88, 5);
 
-	cout << "下一图形:";
+	printf("下一图形：");
 
-} 
+}
 
 /*Map1 begin (15, 1)
   Map2 begin (31, 1)
 */
-void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const int *B2) {
+void Render::DrawGame2(int Map1[32][12], const int* B1, int Map2[32][12], const int* B2) {
 	//player1's map
 	for (int i = 11; i <= 30; ++i) {
 		for (int j = 1; j <= 10; ++j) {
@@ -602,7 +602,7 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 			else
 				SetColor(Map1[i][j]);
 			SetPos(2 * (j + 14), i - 10);
-			cout << "■";
+			fwrite("■", 1, 2, stdout);
 			if (Map2[i][j] == -1)
 				SetColor(0);
 			else if (Map2[i][j] == 0)
@@ -610,7 +610,7 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 			else
 				SetColor(Map2[i][j]);
 			SetPos(2 * (j + 30), i - 10);
-			cout << "■";
+			fwrite("■", 1, 2, stdout);
 		}
 	}
 
@@ -619,7 +619,7 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 	for (int i = 6; i <= 9; ++i) {
 		for (int j = 6; j <= 9; ++j) {
 			SetPos(2 * i, j);
-			cout << "  ";
+			fwrite("  ", 1, 2, stdout);
 		}
 	}
 	SetColor(B1[0]);
@@ -627,14 +627,14 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 		int x = B1[i] + 5;
 		int y = B1[i + 1] + 5;
 		SetPos(2 * y, x);
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 	}
 	//player2's next brick 	
 	//43,5 
 	for (int i = 48; i <= 53; ++i) {
 		for (int j = 6; j <= 9; ++j) {
 			SetPos(2 * i, j);
-			cout << "  ";
+			fwrite("  ", 1, 2, stdout);
 		}
 	}
 	SetColor(B2[0]);
@@ -642,8 +642,6 @@ void Render::DrawGame2(int Map1[32][12], const int *B1, int Map2[32][12], const 
 		int x = B2[i] + 5;
 		int y = B2[i + 1] + 48;
 		SetPos(2 * y, x);
-		cout << "■";
+		fwrite("■", 1, 2, stdout);
 	}
-} 
-
-
+}
