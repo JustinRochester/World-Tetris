@@ -1,4 +1,5 @@
 #include"Render.h"
+#include<windows.h>
 #include<iostream>
 #include<cstring>
 using namespace std;
@@ -42,141 +43,163 @@ void SetPos(short i, short j)			//控制光标位置 列 行
 void Render::Welcome(int Cur)	//游戏刚进去的界面	
 {
 	system("cls");
-	SetColor(3);//设置颜色 
-	cout << endl << "   我罗斯方块		" << endl;
-	cout << endl;
-	SetColor(5);
-	cout << "________________" << endl;
-	cout << "                >" << endl;
-	if (Cur == 0) cout << ">> 开始游戏     >" << endl;
-	else cout << "   开始游戏     >" << endl;
-	if (Cur == 1) cout << ">> 操作说明     >" << endl;
-	else cout << "   操作说明     >" << endl;
-	if (Cur == 2) cout << ">> 开发人员信息 >" << endl;
-	else cout << "   开发人员信息 >" << endl;
-	if (Cur == 3) cout << ">> 退出游戏     >" << endl;
-	else cout << "   退出游戏     >" << endl;
-	cout << "________________>" << endl;
+	SetColor(3);
+	char welcomeUI[300] = { "◆■■■■■■■■\n■              ■\n■  我罗斯方块  ■\n■              ■\n■■■■■■■■■\n■              ■\n■   开始游戏   ■\n■              ■\n■   操作说明   ■\n■              ■\n■   开发人员   ■\n■              ■\n■   退出游戏   ■\n■              ■\n■■■■■■■■◆\n" };
+	if (Cur == 0) {
+		welcomeUI[117] = welcomeUI[118] = '>';
+	}
+	else if (Cur == 1) {
+		welcomeUI[155] = welcomeUI[156] = '>';
+	}
+	else if (Cur == 2) {
+		welcomeUI[193] = welcomeUI[194] = '>';
+	}
+	else if (Cur == 3) {
+		welcomeUI[231] = welcomeUI[232] = '>';
+	}
+	fwrite(welcomeUI, 1, 300, stdout);
 }
 void Render::Explain()
 {
 	system("cls");
-	SetColor(5);
-	cout << "_________________________" << endl;
-	cout << "\t\t\to" << endl;
-	cout << "  单人模式  操作方法\to" << endl;
-	cout << "  ↑& w - 旋转\t\to" << endl;
-	cout << "  ↓& s - 加速下移\to" << endl;
-	cout << "  ←& a - 左移\t\to" << endl;
-	cout << "  →& d - 右移\t\to" << endl;
-	cout << "________________________o" << endl;
+	SetColor(3);
+	cout << "◆■■■■■■■■■■■■■■■■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■      单人模式                ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■       ↑ & w - 旋转\t\t■" << endl;
+	cout << "■       ↓ & s - 速降\t\t■" << endl;
+	cout << "■      ← & a - 左移\t\t■" << endl;
+	cout << "■      → & d - 右移\t\t■" << endl;
+	cout << "■       pause - 暂停\t\t■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■■■■■■■■■■■■■■■■◆" << endl;
 	cout << endl;
-	cout << "_________________________________" << endl;
-	cout << "\t\t\t\to" << endl;
-	cout << "  双人模式 操作方法\t\to" << endl;
-	cout << "  ↑ - 旋转	w - 旋转\to" << endl;
-	cout << "  ↓ - 加速下移	s - 加速下移\to" << endl;
-	cout << "  → - 右移	d - 右移\to" << endl;
-	cout << "  ← - 左移	a - 左移\to" << endl;
-	cout << "________________________________o" << endl;
-	cout << endl;
+	cout << "◆■■■■■■■■■■■■■■■■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■   双人模式                   ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■    ↑ - 旋转\tw - 旋转\t■" << endl;
+	cout << "■    ↓ - 速降\ts - 速降\t■" << endl;
+	cout << "■   → - 右移\td - 右移\t■" << endl;
+	cout << "■   ← - 左移\ta - 左移\t■" << endl;
+	cout << "■       pause - 暂停\t\t■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■                              ■" << endl;
+	cout << "■■■■■■■■■■■■■■■■◆" << endl;
 	cout << endl;
 	cout << ">> ^返回^" << endl;
 }
 void Render::GameModeMenu(int Cur)
 {
 	system("cls");
+	SetColor(3);
+	std::cout << "◆■■■■■■■■■■■■■■" << std::endl;
 
-	std::cout << "<><><><><><><><><><><><><><><>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■      请选择游戏模式      ■" << std::endl;
 
-	std::cout << "<>      请选择游戏模式      <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■ ( ESC 键可退回开始界面)  ■" << std::endl;
 
-	std::cout << "<> ( ESC 键可退回开始界面)  <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((0 == Cur) * '>') << char((0 == Cur) * '>') << " " << "0.单人修仙" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((0 == Cur) * '>') << char((0 == Cur) * '>') << " " << "0.单人修仙" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((1 == Cur) * '>') << char((1 == Cur) * '>') << " " << "1.单人加行" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((1 == Cur) * '>') << char((1 == Cur) * '>') << " " << "1.单人加行" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((2 == Cur) * '>') << char((2 == Cur) * '>') << " " << "2.单人加速" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((2 == Cur) * '>') << char((2 == Cur) * '>') << " " << "2.单人加速" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((3 == Cur) * '>') << char((3 == Cur) * '>') << " " << "3.单人加行加速" << "     ■" << std::endl;
 
-	std::cout << "<>    " << char((3 == Cur) * '>') << char((3 == Cur) * '>') << " " << "3.单人加行加速" << "     <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((4 == Cur) * '>') << char((4 == Cur) * '>') << " " << "4.双人修仙" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((4 == Cur) * '>') << char((4 == Cur) * '>') << " " << "4.双人修仙" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((5 == Cur) * '>') << char((5 == Cur) * '>') << " " << "5.双人加行" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((5 == Cur) * '>') << char((5 == Cur) * '>') << " " << "5.双人加行" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((6 == Cur) * '>') << char((6 == Cur) * '>') << " " << "6.双人加速" << "         ■" << std::endl;
 
-	std::cout << "<>    " << char((6 == Cur) * '>') << char((6 == Cur) * '>') << " " << "6.双人加速" << "         <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((7 == Cur) * '>') << char((7 == Cur) * '>') << " " << "7.双人加行加速" << "     ■" << std::endl;
 
-	std::cout << "<>    " << char((7 == Cur) * '>') << char((7 == Cur) * '>') << " " << "7.双人加行加速" << "     <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((8 == Cur) * '>') << char((8 == Cur) * '>') << " " << "8.双人此消彼长" << "     ■" << std::endl;
 
-	std::cout << "<>    " << char((8 == Cur) * '>') << char((8 == Cur) * '>') << " " << "8.双人此消彼长" << "     <>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
 
-	std::cout << "<>                          <>" << std::endl;
+	std::cout << "■    " << char((9 == Cur) * '>') << char((9 == Cur) * '>') << " " << "9.双人此消彼长加速" << " ■" << std::endl;
 
-	std::cout << "<>    " << char((9 == Cur) * '>') << char((9 == Cur) * '>') << " " << "9.双人此消彼长加速" << " <>" << std::endl;
-
-	std::cout << "<>                          <>" << std::endl;
-
-	std::cout << "<><><><><><><><><><><><><><><>" << std::endl;
+	std::cout << "■                          ■" << std::endl;
+	std::cout << "■                          ■" << std::endl;
+	std::cout << "■■■■■■■■■■■■■■◆" << std::endl;
 }
 void Render::Participants()
 {
 	system("cls");
-	SetColor(5);
-	cout << "程序开发参与人员： JustinRochester" << endl;
+	SetColor(3);
+	cout << "◆■■■■■■■■■■■■■■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■  程序开发参与人员：      ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■    JustinRochester       ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■    Taj426                ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■    fzuliaoliao           ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■  特别感谢：              ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■    yingluosanqian        ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■■■■■■■■■■■■■■◆" << endl;
 	cout << endl;
-	cout << "                   Taj426" << endl;
-	cout << endl;
-	cout << "                   fzuliaoliao" << endl;
-	cout << endl;
-	cout << "        特别感谢： yingluosanqian" << endl;
 	cout << endl;
 	cout << ">> ^返回^" << endl;
 }
 void Render::helpText(int GameMode)
 {
 	system("cls");
-	SetColor(5);
+	SetColor(6);
 	cout << endl;
-	cout << "  当你们看见方块掉落时，什么都不要干，就这么看着它。" << endl;
-
+	Sleep(1000);
+	cout << "  当你们看见方块掉落时，什么都不要干，就这么看着它。" << endl << endl;
+	Sleep(1500);
 	cout << "  谁先顶到天花板，谁就赢了。" << endl;
-
+	Sleep(1000);
 	cout << endl;
 
-	cout << "  如果你们乱动方块，会把填满的行消掉。我们会记录你们的分数：" << endl;
+	SetColor(3);
+	cout << "  如果你们乱动方块，会把填满的行消掉。我们会记录你们的分数：" << endl << endl;
+	
+	cout << "\t消除 1 行，记录 10 分" << endl << endl;
 
-	cout << "\t消除 1 行，记录 10 分" << endl;
+	cout << "\t消除 2 行，记录 30 分" << endl << endl;
 
-	cout << "\t消除 2 行，记录 30 分" << endl;
+	cout << "\t消除 3 行，记录 60 分" << endl << endl;
 
-	cout << "\t消除 3 行，记录 60 分" << endl;
-
-	cout << "\t消除 4 行，记录 100 分" << endl;
+	cout << "\t消除 4 行，记录 100 分" << endl << endl;
 
 	cout << endl;
 
@@ -198,15 +221,15 @@ void Render::helpText(int GameMode)
 
 	if (GameMode == 1 || GameMode == 3 || GameMode == 5 || GameMode == 7) {
 
-		cout << "  为了方便你们顶到天花板，每次方块下落有 1% 的概率触发加行 buff :" << endl;
+		cout << "  为了方便你们顶到天花板，每次方块下落有 1% 的概率触发加行 buff :" << endl << endl;
+	
+		cout << "\t其中有 40% 的概率增加 1 行" << endl << endl;
+	
+		cout << "\t其中有 30% 的概率增加 2 行" << endl << endl;
+	
+		cout << "\t其中有 20% 的概率增加 3 行" << endl << endl;
 
-		cout << "\t其中有 40% 的概率增加 1 行" << endl;
-
-		cout << "\t其中有 30% 的概率增加 2 行" << endl;
-
-		cout << "\t其中有 20% 的概率增加 3 行" << endl;
-
-		cout << "\t其中有 10% 的概率增加 4 行" << endl;
+		cout << "\t其中有 10% 的概率增加 4 行" << endl << endl;
 
 		cout << endl;
 
@@ -221,55 +244,75 @@ void Render::helpText(int GameMode)
 void Render::PreStart(int Cur)
 {
 	system("cls");
-	SetColor(5);
-	cout << endl;
-	if (Cur == 0) cout << "      >> 开始游戏" << endl;
-	else cout << "         开始游戏" << endl;
-	cout << endl;
-	if (Cur == 1) cout << "      >> 查看帮助文档" << endl;
-	else cout << "         查看帮助文档" << endl;
-	cout << endl;
-	if (Cur == 2) cout << "      >> 重选模式" << endl;
-	else cout << "         重选模式" << endl;
-	cout << endl;
-	if (Cur == 3) cout << "      >> 退出游戏" << endl;
-	else cout << "         退出游戏" << endl;
+	SetColor(3);
+	cout << "◆■■■■■■■■■■■■■■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 0)
+	cout << "■      >> 开始游戏         ■" << endl;
+	else
+	cout << "■         开始游戏         ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 1)
+	cout << "■      >> 查看帮助         ■" << endl;
+	else
+	cout << "■         查看帮助         ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 2)
+	cout << "■      >> 更换模式         ■" << endl;
+	else
+	cout << "■         更换模式         ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 3)
+	cout << "■      >> 退出游戏         ■" << endl;
+	else
+	cout << "■         退出游戏         ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■■■■■■■■■■■■■■◆" << endl;
 }
 
 void Render::End(int Cur, int num, const string& player1, int score1, const string& player2, int score2)
 {
 	system("cls");
-	cout << endl;
 	SetColor(3);
-	cout << "   游戏已经结束" << endl;
-	cout << endl;
-	SetColor(5);
-	cout << "   " << player1 << ":" << score1 << endl;
-	cout << endl;
+	cout << "◆■■■■■■■■■■■■■■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■         游戏结束！       ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■    " << player1 << " 得分 ：" << score1;
+	for (int i = Len(score1); i <= 8; i++) putchar(' ');
+	cout << "■" << endl;
+	cout << "■                          ■" << endl;
 	if (num > 1) {
-		cout << "   " << player2 << ":" << score2 << endl;
-		cout << endl;
+		cout << "■    " << player2 << " 得分 ：" << score2;
+		for (int i = Len(score2); i <= 8; i++) putchar(' ');
+		cout << "■" << endl;
+		cout << "■                          ■" << endl;
 	}
-	cout << endl << endl;
 	if (Cur == 0)
-		cout << ">> 重新开始游戏" << endl;
+	cout << "■      >> 重新游戏         ■" << endl;
 	else
-		cout << "   重新开始游戏" << endl;
-	cout << endl;
+	cout << "■         重新游戏         ■" << endl;
+	cout << "■                          ■" << endl;
 	if (Cur == 1)
-		cout << ">> 重选游戏模式" << endl;
+	cout << "■      >> 更换模式         ■" << endl;
 	else
-		cout << "   重选游戏模式" << endl;
-	cout << endl;
+	cout << "■         更换模式         ■" << endl;
+	cout << "■                          ■" << endl;
 	if (Cur == 2)
-		cout << ">> 返回开始界面" << endl;
+	cout << "■      >> 返回菜单         ■" << endl;
 	else
-		cout << "   返回开始界面" << endl;
-	cout << endl;
+	cout << "■         返回菜单         ■" << endl;
+	cout << "■                          ■" << endl;
 	if (Cur == 3)
-		cout << ">> 退出游戏" << endl;
+	cout << "■      >> 退出游戏         ■" << endl;
 	else
-		cout << "   退出游戏" << endl;
+	cout << "■         退出游戏         ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■■■■■■■■■■■■■■◆" << endl;
 }
 
 void Render::SetColor(int color_num)//设置颜色
@@ -756,4 +799,13 @@ void Render::DrawGame2(int Map1[32][12], const int* NowBrick1, const int* NextBr
 	//	SetPos(2 * y, x);
 	//	fwrite("■", 1, 2, stdout);
 	//}
+}
+
+int Render::Len(int n) {
+	int ret = 0;
+	do {
+		n /= 10;
+		ret++;
+	} while (n);
+	return ret;
 }
