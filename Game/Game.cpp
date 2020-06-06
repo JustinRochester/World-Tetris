@@ -18,7 +18,7 @@ const char Game::ENTER = 13;
 
 Game::Game() {
 	FramesCount = 0;
-	OperationMode = 2;
+	OperationMode = 1;
 	render.HideCursor();
 	render.SetTitle();
 	player[0] = player[1] = NULL;
@@ -61,7 +61,7 @@ bool Game::welcome() {
 
 void Game::Setting() {
 	static int CountProperties = 1;
-	static bool Properties[] = { 0 };
+	static bool Properties[] = { 1 };
 	int Cur = 0;
 	while (1) {
 		render.Setting(Cur, Properties, CountProperties);
@@ -75,7 +75,7 @@ void Game::Setting() {
 				OperationMode = ((Properties[0]) ? 1 : 2);
 				return;
 			}
-			//Properties[Cur] ^= 1;
+			Properties[Cur] ^= 1;
 		}
 		moveCur(Cur, c);
 		Cur = (Cur % 2 + 2) % 2;
@@ -364,6 +364,23 @@ bool Game::isKeyDown(short VK_VALUE) {
 	return GetAsyncKeyState(VK_VALUE) < 0;
 }
 
+char Game::carryKeys1(bool& RenewFlames) {
+	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
+	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
+	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
+	static int LIMIT = 4, CountKey[8] = { 0 };
+	for (int i = 0; i < 8; i++)
+		if (isKeyDown(VK_VALUE[i])) {
+			CountKey[i]++;
+			if (CountKey[i] == LIMIT) {
+				RenewFlames |= carryCommand(toASC[i]);
+				CountKey[i] = 0;
+			}
+		}
+		else CountKey[i] = 0;
+	return (isKeyDown(VK_ESCAPE)) * ESC;
+}
+
 char Game::carryKeys2(bool& RenewFlames) {
 	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
 	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
@@ -379,6 +396,8 @@ char Game::carryKeys2(bool& RenewFlames) {
 }
 
 char Game::PlayerOperation(bool& RenewFlames) {
+	if (OperationMode == 1)
+		return carryKeys1(RenewFlames);
 	if (OperationMode == 2)
 		return carryKeys2(RenewFlames);
 }
@@ -404,7 +423,11 @@ int Game::play() {
 	render.DrawGameMap(CountPlayer);
 	renderMap();
 	PlayerAllow[0] = PlayerAllow[1] = 1;
+
+	double SumTime = 0, CntTime = 0;
+
 	for (clock_t last = clock(), now = last;; now = clock()) {
+		clock_t LastTime = clock();
 		if (now - last >= FramesTime) {
 			PlayerAllow[0] = PlayerAllow[1] = 1;
 			last = now - now % FramesTime;
@@ -439,6 +462,12 @@ int Game::play() {
 			break;
 		if (RenewFlames)
 			renderMap();
+		LastTime = clock() - LastTime;
+		if (OperationMode == 1 && FramesTime > LastTime) {
+			Sleep(FramesTime - LastTime);
+			SumTime += LastTime;
+			CntTime += 1;
+		}
 
 		if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
 			FramesLimit = 1000 / FramesTime - (player[0]->getScore() + player[1]->getScore()) / 10;

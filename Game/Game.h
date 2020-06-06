@@ -24,6 +24,7 @@ private:
 	static bool isKeyDown(short);
 
 	bool carryCommand(char);
+	char carryKeys1(bool&);
 	char carryKeys2(bool&);
 	char PlayerOperation(bool&);
 	int play();
