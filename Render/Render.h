@@ -27,6 +27,7 @@ public:
 	*/
 	static void HideCursor();
 	static void SetTitle();
+	void Setting(int,bool[],int);//偏好设置
 	void GameModeMenu(int);//模式 
 	void Explain();//解释说明
 	void Participants();//参与人员

@@ -40,12 +40,25 @@ void SetPos(short i, short j)			//控制光标位置 列 行
 }
 
 
+void Render::Setting(int Cur, bool SettingProperties[],int CountProperties) {
+	static char SettingUI[] = { "◆■■■■■■■■■■\n■                  ■\n■    允许长按：    ■\n■                  ■\n■    返回          ■\n■                  ■\n■■■■■■■■■■◆\n" };
+	system("cls");
+	fwrite(SettingUI, 1, sizeof(SettingUI), stdout);
+	for (int i = 0; i < CountProperties; i++) {
+		SetPos(16, 2 * i + 2);
+		if (SettingProperties[i] == 1) fwrite("是", 1, 2, stdout);
+		else fwrite("否", 1, 2, stdout);
+	}
+	SetPos(4, 2 * Cur + 2);
+	fwrite(">>", 1, 2, stdout);
+}
+
 void Render::Welcome(int Cur)	//游戏刚进去的界面	
 {
+	static char welcomeUI[] = { "◆■■■■■■■■\n■              ■\n■  我罗斯方块  ■\n■              ■\n■■■■■■■■■\n■              ■\n■   开始游戏   ■\n■              ■\n■   操作说明   ■\n■              ■\n■   开发人员   ■\n■              ■\n■   相关设置   ■\n■              ■\n■   退出游戏   ■\n■              ■\n■■■■■■■■◆\n" };
 	system("cls");
 	SetColor(3);
-	char welcomeUI[300] = { "◆■■■■■■■■\n■              ■\n■  我罗斯方块  ■\n■              ■\n■■■■■■■■■\n■              ■\n■   开始游戏   ■\n■              ■\n■   操作说明   ■\n■              ■\n■   开发人员   ■\n■              ■\n■   退出游戏   ■\n■              ■\n■■■■■■■■◆\n" };
-	if (Cur == 0) {
+	/*if (Cur == 0) {
 		welcomeUI[117] = welcomeUI[118] = '>';
 	}
 	else if (Cur == 1) {
@@ -56,8 +69,10 @@ void Render::Welcome(int Cur)	//游戏刚进去的界面
 	}
 	else if (Cur == 3) {
 		welcomeUI[231] = welcomeUI[232] = '>';
-	}
-	fwrite(welcomeUI, 1, 300, stdout);
+	}*/
+	fwrite(welcomeUI, 1, sizeof(welcomeUI), stdout);
+	SetPos(3, 6+Cur*2);
+	fwrite(">>", 1, 2, stdout);
 }
 void Render::Explain()
 {

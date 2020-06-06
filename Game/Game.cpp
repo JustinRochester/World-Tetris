@@ -6,7 +6,6 @@
 #include<cstdlib>
 #include<iostream>
 
-int Game::FramesCount = 0;
 int Game::FramesTime = 25;
 
 const char Game::UP = 72;
@@ -18,6 +17,8 @@ const char Game::ESC = 27;
 const char Game::ENTER = 13;
 
 Game::Game() {
+	FramesCount = 0;
+	OperationMode = 2;
 	render.HideCursor();
 	render.SetTitle();
 	player[0] = player[1] = NULL;
@@ -31,6 +32,54 @@ Game::~Game() {
 			delete player[i];
 			player[i] = NULL;
 		}
+}
+
+bool Game::welcome() {
+	int Cur = 0;
+	while (1) {
+		render.Welcome(Cur);
+		char c = _getch();
+		if (c == ESC)
+			return 0;
+		if (c == ENTER) {
+			if (0);
+			else if (Cur == 0)
+				return 1;
+			else if (Cur == 1)
+				explain();
+			else if (Cur == 2)
+				participants();
+			else if (Cur == 3)
+				Setting();
+			else if (Cur == 4)
+				return 0;
+		}
+		moveCur(Cur, c);
+		Cur = (Cur % 5 + 5) % 5;
+	}
+}
+
+void Game::Setting() {
+	static int CountProperties = 1;
+	static bool Properties[] = { 0 };
+	int Cur = 0;
+	while (1) {
+		render.Setting(Cur, Properties, CountProperties);
+		char c = _getch();
+		if (c == ESC) {
+			OperationMode = ((Properties[0]) ? 1 : 2);
+			return;
+		}
+		if (c == ENTER) {
+			if (Cur == CountProperties) {
+				OperationMode = ((Properties[0]) ? 1 : 2);
+				return;
+			}
+			//Properties[Cur] ^= 1;
+		}
+		moveCur(Cur, c);
+		Cur = (Cur % 2 + 2) % 2;
+	}
 }
 
 void Game::helpText() {
@@ -60,29 +109,6 @@ void Game::participants() {
 		char c = _getch();
 		if (c == ESC || c == ENTER)
 			return;
-	}
-}
-
-bool Game::welcome() {
-	int Cur = 0;
-	while (1) {
-		render.Welcome(Cur);
-		char c = _getch();
-		if (c == ESC)
-			return 0;
-		if (c == ENTER) {
-			if (0);
-			else if (Cur == 0)
-				return 1;
-			else if (Cur == 1)
-				explain();
-			else if (Cur == 2)
-				participants();
-			else if (Cur == 3)
-				return 0;
-		}
-		moveCur(Cur,c);
-		Cur = (Cur % 4 + 4) % 4;
 	}
 }
 
@@ -190,25 +216,24 @@ void Game::addOtherLines(int DeleteLinePlayer, int CountDeletedLine) {
 	}
 }
 
-void Game::carryCommand(char c) {
-	static int Turn = 0;
+bool Game::carryCommand(char c) {
 	/*
 	This method is used to carry the correct command 'c'.
 	Surely, it won't work if the command is not defined.
 	*/
-	if (c == Game::DIRECTIONS)
-		c = _getch();
+	/*if (c == Game::DIRECTIONS)
+		c = _getch();*/
 	int CountDeleteLines;
 	if (0);
 	/*
 	It is setted just make the code more symmetrical.
 	*/
 	else if (c == 0) {
-		CountDeleteLines = player[Turn]->run(0);
-		addOtherLines(Turn, CountDeleteLines);
-		Turn ^= 1;
-		CountDeleteLines = player[Turn]->run(0);
-		addOtherLines(Turn, CountDeleteLines);
+		CountDeleteLines = player[0]->run(0);
+		addOtherLines(0, CountDeleteLines);
+		CountDeleteLines = player[1]->run(0);
+		addOtherLines(1, CountDeleteLines);
+		return 1;
 	}
 	else if (c == UP || c == 'W' || c == 'w') {
 		/*
@@ -216,12 +241,20 @@ void Game::carryCommand(char c) {
 		The same to the next.
 		*/
 		if (CountPlayer == 1 || c != UP) {
+			if (!PlayerAllow[0])
+				return 0;
 			CountDeleteLines = player[0]->run(Brick::Rotate);
 			addOtherLines(0, CountDeleteLines);
+			PlayerAllow[0] = 0;
+			return 1;
 		}
 		else {
+			if (!PlayerAllow[1])
+				return 0;
 			CountDeleteLines = player[1]->run(Brick::Rotate);
 			addOtherLines(1, CountDeleteLines);
+			PlayerAllow[1] = 0;
+			return 1;
 		}
 		/*
 		It will add CountDeleteLines to others if the player remove CountDeleteLines lines in GameMode 8 or 9.
@@ -230,34 +263,59 @@ void Game::carryCommand(char c) {
 	}
 	else if (c == DOWN || c == 'S' || c == 's') {
 		if (CountPlayer == 1 || c != DOWN) {
+			if (!PlayerAllow[0])
+				return 0;
 			CountDeleteLines = player[0]->run(Brick::Down);
 			addOtherLines(0, CountDeleteLines);
+			PlayerAllow[0] = 0;
+			return 1;
 		}
 		else {
+			if (!PlayerAllow[1])
+				return 0;
 			CountDeleteLines = player[1]->run(Brick::Down);
 			addOtherLines(1, CountDeleteLines);
+			PlayerAllow[1] = 0;
+			return 1;
 		}
 	}
 	else if (c == LEFT || c == 'A' || c == 'a') {
 		if (CountPlayer == 1 || c != LEFT) {
+			if (!PlayerAllow[0])
+				return 0;
 			CountDeleteLines = player[0]->run(Brick::Left);
 			addOtherLines(0, CountDeleteLines);
+			PlayerAllow[0] = 0;
+			return 1;
 		}
 		else {
+			if (!PlayerAllow[1])
+				return 0;
 			CountDeleteLines = player[1]->run(Brick::Left);
 			addOtherLines(1, CountDeleteLines);
+			PlayerAllow[1] = 0;
+			return 1;
 		}
 	}
 	else if (c == RIGHT || c == 'D' || c == 'd') {
 		if (CountPlayer == 1 || c != RIGHT) {
+			if (!PlayerAllow[0])
+				return 0;
 			CountDeleteLines = player[0]->run(Brick::Right);
 			addOtherLines(0, CountDeleteLines);
+			PlayerAllow[0] = 0;
+			return 1;
 		}
 		else {
+			if (!PlayerAllow[1])
+				return 0;
 			CountDeleteLines = player[1]->run(Brick::Right);
 			addOtherLines(1, CountDeleteLines);
+			PlayerAllow[1] = 0;
+			return 1;
 		}
 	}
+	return 0;
 }
 
 int Game::preStart() {
@@ -302,6 +360,29 @@ int Game::End() {
 	}
 }
 
+bool Game::isKeyDown(short VK_VALUE) {
+	return GetAsyncKeyState(VK_VALUE) < 0;
+}
+
+char Game::carryKeys2(bool& RenewFlames) {
+	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
+	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
+	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
+	static bool IsKeyDown[8] = { 0 };
+	for (int i = 0; i < 8; i++) {
+		bool State = isKeyDown(VK_VALUE[i]);
+		if (IsKeyDown[i] && !State)
+			RenewFlames|=carryCommand(toASC[i]);
+		IsKeyDown[i] = State;
+	}
+	return (isKeyDown(VK_ESCAPE)) * ESC;
+}
+
+char Game::PlayerOperation(bool& RenewFlames) {
+	if (OperationMode == 2)
+		return carryKeys2(RenewFlames);
+}
+
 int Game::play() {
 	/*
 	This method is used to carry the World-Teris game circularly.
@@ -311,23 +392,32 @@ int Game::play() {
 	if (Res != 0)
 		return Res;
 
-	system("cls");
+	//system("cls");
 	int FramesLimit = 1000 / FramesTime;
 	/*
 	Number FramesLimit is setted as the limits of FramesCount.
 	It will make the bricks fall down 1 cell, if the FramesCount is not less than it.
 	*/
+
 	player[0]->setName("Íæ¼Ò1");
 	player[1]->setName("Íæ¼Ò2");
 	render.DrawGameMap(CountPlayer);
 	renderMap();
+	PlayerAllow[0] = PlayerAllow[1] = 1;
 	for (clock_t last = clock(), now = last;; now = clock()) {
-		if (Game::FramesCount >= FramesLimit) {
+		if (now - last >= FramesTime) {
+			PlayerAllow[0] = PlayerAllow[1] = 1;
+			last = now - now % FramesTime;
+			FramesCount++;
+		}
+		bool RenewFlames = 0;
+		if (FramesCount >= FramesLimit) {
+			RenewFlames = 1;
 			/*
 			It is time to make the bricks fall down.
 			*/
 			carryCommand(0);
-			Game::FramesCount -= FramesLimit;
+			FramesCount -= FramesLimit;
 
 			if (GameMode == 1 || GameMode == 3 || GameMode == 5 || GameMode == 7)
 				for (int i = 0; i < CountPlayer; i++)
@@ -344,18 +434,11 @@ int Game::play() {
 					}
 
 		}
-		clock_t LastTime = clock();
-		if (_kbhit()) {
-			char c = _getch();
-			if (c == ESC)
-				break;
-			carryCommand(c);
-		}
-		LastTime = clock()-LastTime;
-		if(Game::FramesTime>LastTime)
-			Sleep(Game::FramesTime - LastTime);
-		renderMap();
-		Game::FramesCount++;
+		char c = PlayerOperation(RenewFlames);
+		if (c == ESC)
+			break;
+		if (RenewFlames)
+			renderMap();
 
 		if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
 			FramesLimit = 1000 / FramesTime - (player[0]->getScore() + player[1]->getScore()) / 10;

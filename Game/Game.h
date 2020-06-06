@@ -7,8 +7,9 @@ class Game {
 private:
 	Player *player[2];
 	Render render;
-	int GameMode,CountPlayer;
-	static int FramesCount, FramesTime;
+	int GameMode, CountPlayer, FramesCount, OperationMode;
+	bool PlayerAllow[2];
+	static int FramesTime;
 	static const char ESC, LEFT, RIGHT, UP, DOWN, DIRECTIONS, ENTER;
 
 	void explain();
@@ -18,8 +19,13 @@ private:
 	void helpText();
 	int preStart();
 	int End();
+	void Setting();
 
-	void carryCommand(char);
+	static bool isKeyDown(short);
+
+	bool carryCommand(char);
+	char carryKeys2(bool&);
+	char PlayerOperation(bool&);
 	int play();
 	void addOtherLines(int,int);
 	void moveCur(int&,char);
