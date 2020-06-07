@@ -368,7 +368,7 @@ char Game::carryKeys1(bool& RenewFlames) {
 	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
 	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
 	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
-	static int LIMIT = 4, CountKey[8] = { 0 };
+	static int LIMIT = 3, CountKey[8] = { 0 };
 	for (int i = 0; i < 8; i++)
 		if (isKeyDown(VK_VALUE[i])) {
 			CountKey[i]++;
@@ -385,12 +385,16 @@ char Game::carryKeys2(bool& RenewFlames) {
 	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
 	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
 	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
-	static bool IsKeyDown[8] = { 0 };
+	static bool IsKeyDown[8] = { 0 }, IsKeyCarried[8] = { 0 };
 	for (int i = 0; i < 8; i++) {
-		bool State = isKeyDown(VK_VALUE[i]);
-		if (IsKeyDown[i] && !State)
-			RenewFlames|=carryCommand(toASC[i]);
-		IsKeyDown[i] = State;
+		IsKeyDown[i] = isKeyDown(VK_VALUE[i]);
+		if (IsKeyDown[i]) {
+			if (IsKeyCarried[i])
+				continue;
+			IsKeyCarried[i] = 1;
+			RenewFlames |= carryCommand(toASC[i]);
+		}
+		else IsKeyCarried[i] = 0;
 	}
 	return (isKeyDown(VK_ESCAPE)) * ESC;
 }
