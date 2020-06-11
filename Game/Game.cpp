@@ -18,7 +18,7 @@ const char Game::ENTER = 13;
 
 Game::Game() {
 	FramesCount = 0;
-	OperationMode = 1;
+	OperationMode = fileRecoder.OperationMode;
 	render.HideCursor();
 	render.SetTitle();
 	player[0] = player[1] = NULL;
@@ -27,6 +27,7 @@ Game::Game() {
 }
 
 Game::~Game() {
+	fileRecoder.OperationMode = OperationMode;
 	for (int i = 0; i < 2; i++)
 		if (player[i] != NULL) {
 			delete player[i];
@@ -49,8 +50,11 @@ bool Game::welcome() {
 				explain();
 			else if (Cur == 2)
 				participants();
-			else if (Cur == 3)
+			else if (Cur == 3) {
 				Setting();
+				fileRecoder.OperationMode = OperationMode;
+				fileRecoder.outputData();
+			}
 			else if (Cur == 4)
 				return 0;
 		}
@@ -59,20 +63,30 @@ bool Game::welcome() {
 	}
 }
 
+void Game::historicRecord() {
+	int Cur = 0;
+	while (1) {
+		render.historicRecord(fileRecoder.NameRecoder[GameMode],fileRecoder.ScoreRecoder[GameMode]);
+		char c = _getch();
+		if (c == ESC || c == ENTER)
+			return;
+	}
+}
+
 void Game::Setting() {
 	static int CountProperties = 1;
-	static bool Properties[] = { 1 };
+	bool Properties[] = { OperationMode };
 	int Cur = 0;
 	while (1) {
 		render.Setting(Cur, Properties, CountProperties);
 		char c = _getch();
 		if (c == ESC) {
-			OperationMode = ((Properties[0]) ? 1 : 2);
+			OperationMode = ((Properties[0]) ? 1 : 0);
 			return;
 		}
 		if (c == ENTER) {
 			if (Cur == CountProperties) {
-				OperationMode = ((Properties[0]) ? 1 : 2);
+				OperationMode = ((Properties[0]) ? 1 : 0);
 				return;
 			}
 			Properties[Cur] ^= 1;
@@ -333,19 +347,32 @@ int Game::preStart() {
 				helpText();
 				continue;
 			}
-			else if (Cur == 2)
-				return 1;
+			else if (Cur == 2) {
+				historicRecord();
+				continue;
+			}
 			else if (Cur == 3)
+				return 1;
+			else if (Cur == 4)
 				return 3;
 		}
 		else {
 			moveCur(Cur, c);
-			Cur = (Cur % 4 + 4) % 4;
+			Cur = (Cur % 5 + 5) % 5;
 		}
 	}
 }
 
 int Game::End() {
+	if (0);
+	else if (CountPlayer == 1)
+		fileRecoder.update(GameMode, 1, player[0]->getScore());
+	else if (CountPlayer == 2)
+		fileRecoder.update(
+			GameMode,
+			(player[1]->getScore() >= player[0]->getScore()) << 1 | (player[0]->getScore() >= player[0]->getScore()),
+			(player[0]->getScore() >= player[1]->getScore()) ? player[0]->getScore() : player[1]->getScore()
+		);
 	render.SetColor(5);
 	int Cur = 0;
 	while (1) {
@@ -362,6 +389,24 @@ int Game::End() {
 
 bool Game::isKeyDown(short VK_VALUE) {
 	return GetAsyncKeyState(VK_VALUE) < 0;
+}
+
+char Game::carryKeys0(bool& RenewFlames) {
+	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
+	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
+	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
+	static bool IsKeyDown[8] = { 0 }, IsKeyCarried[8] = { 0 };
+	for (int i = 0; i < 8; i++) {
+		IsKeyDown[i] = isKeyDown(VK_VALUE[i]);
+		if (IsKeyDown[i]) {
+			if (IsKeyCarried[i])
+				continue;
+			IsKeyCarried[i] = 1;
+			RenewFlames |= carryCommand(toASC[i]);
+		}
+		else IsKeyCarried[i] = 0;
+	}
+	return (isKeyDown(VK_ESCAPE)) * ESC;
 }
 
 char Game::carryKeys1(bool& RenewFlames) {
@@ -381,29 +426,12 @@ char Game::carryKeys1(bool& RenewFlames) {
 	return (isKeyDown(VK_ESCAPE)) * ESC;
 }
 
-char Game::carryKeys2(bool& RenewFlames) {
-	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
-	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
-	static const char toASC[] = { UP,DOWN,LEFT,RIGHT,'W','S','A','D' };
-	static bool IsKeyDown[8] = { 0 }, IsKeyCarried[8] = { 0 };
-	for (int i = 0; i < 8; i++) {
-		IsKeyDown[i] = isKeyDown(VK_VALUE[i]);
-		if (IsKeyDown[i]) {
-			if (IsKeyCarried[i])
-				continue;
-			IsKeyCarried[i] = 1;
-			RenewFlames |= carryCommand(toASC[i]);
-		}
-		else IsKeyCarried[i] = 0;
-	}
-	return (isKeyDown(VK_ESCAPE)) * ESC;
-}
-
 char Game::PlayerOperation(bool& RenewFlames) {
-	if (OperationMode == 1)
+	if (0);
+	else if (OperationMode == 0)
+		return carryKeys0(RenewFlames);
+	else if (OperationMode == 1)
 		return carryKeys1(RenewFlames);
-	if (OperationMode == 2)
-		return carryKeys2(RenewFlames);
 }
 
 int Game::play() {
@@ -422,8 +450,8 @@ int Game::play() {
 	It will make the bricks fall down 1 cell, if the FramesCount is not less than it.
 	*/
 
-	player[0]->setName("Íæ¼Ò1");
-	player[1]->setName("Íæ¼Ò2");
+	player[0]->setName(fileRecoder.NamePlayer[0]);
+	player[1]->setName(fileRecoder.NamePlayer[1]);
 	render.DrawGameMap(CountPlayer);
 	renderMap();
 	PlayerAllow[0] = PlayerAllow[1] = 1;

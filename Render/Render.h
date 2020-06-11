@@ -35,6 +35,7 @@ public:
 	void End(int Cur, int num,const std::string &player1, int score1,const std::string &player2, int score);//结束界面
 	void PreStart(int);//重选
 	int Len(int n);//计算数字位数
+	void historicRecord(const std::string &,int);
 
 	void DrawGameMap(int);
 };

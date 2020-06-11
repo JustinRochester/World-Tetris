@@ -256,6 +256,27 @@ void Render::helpText(int GameMode)
 
 }
 
+void Render::historicRecord(const string &Name,int Score) {
+	system("cls");
+	cout << "◆■■■■■■■■■■■■■■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■■■■■■■■■■■■■■◆" << endl;
+	cout << endl;
+	cout << ">> ^返回^" << endl;
+	int Pos = 30 - Name.size();
+	Pos >>= 1;
+	if (Pos & 1) Pos ^= 1;
+	SetPos(Pos, 3);
+	cout << Name << "：";
+	SetPos(13, 4);
+	cout << Score << "分";
+}
+
 void Render::PreStart(int Cur)
 {
 	system("cls");
@@ -274,11 +295,16 @@ void Render::PreStart(int Cur)
 	cout << "■         查看帮助         ■" << endl;
 	cout << "■                          ■" << endl;
 	if (Cur == 2)
+		cout << "■      >> 历史记录         ■" << endl;
+	else
+		cout << "■         历史记录         ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 3)
 	cout << "■      >> 更换模式         ■" << endl;
 	else
 	cout << "■         更换模式         ■" << endl;
 	cout << "■                          ■" << endl;
-	if (Cur == 3)
+	if (Cur == 4)
 	cout << "■      >> 退出游戏         ■" << endl;
 	else
 	cout << "■         退出游戏         ■" << endl;
@@ -296,15 +322,22 @@ void Render::End(int Cur, int num, const string& player1, int score1, const stri
 	cout << "■                          ■" << endl;
 	cout << "■         游戏结束！       ■" << endl;
 	cout << "■                          ■" << endl;
-	cout << "■    " << player1 << " 得分 ：" << score1;
-	for (int i = Len(score1); i <= 8; i++) putchar(' ');
-	cout << "■" << endl;
+	cout << "■           得分           ■" << endl;
 	cout << "■                          ■" << endl;
-	if (num > 1) {
-		cout << "■    " << player2 << " 得分 ：" << score2;
-		for (int i = Len(score2); i <= 8; i++) putchar(' ');
-		cout << "■" << endl;
-		cout << "■                          ■" << endl;
+	for (int i = 1; i <= num; i++)
+		for (int j = 1; j <= 3; j++)
+			cout << "■                          ■" << endl;
+	SetPos(11, 7);
+	cout << player1 << "：";
+	SetPos(13, 8);
+	cout << score1 << "分";
+	SetPos(0, 10);
+	if (num == 2) {
+		SetPos(11, 10);
+		cout << player2 << "：";
+		SetPos(13, 11);
+		cout << score2 << "分";
+		SetPos(0, 13);
 	}
 	if (Cur == 0)
 	cout << "■      >> 重新游戏         ■" << endl;
