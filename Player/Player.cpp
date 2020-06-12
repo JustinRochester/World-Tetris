@@ -239,6 +239,7 @@ void Player::renewBrick() {
 	}
 }
 int Player::addLine(int CountLine) {
+	TouchedBottom = 0;
 	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 2;
 	if (GameOver)
 		return 0;

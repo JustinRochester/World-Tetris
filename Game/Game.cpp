@@ -21,7 +21,7 @@ const std::string Game::TouchSoundPath[] = {
 	"","TouchSound.mp3"
 };
 const std::string Game::KeySoundPath[] = {
-	"",""
+	"","TouchSound.mp3"
 };
 const std::string Game::BGMPath[11][2] = {
 	"","Yequ.mp3",
@@ -589,6 +589,7 @@ int Game::play() {
 	BGMMusic[10].StopSoundEffect();
 	BGMMusic[GameMode].StopSoundEffect();
 	BGMMusic[GameMode].PlaySoundEffect(BGMPath[GameMode][IsBackgroundMusicOn]);
+
 	for (clock_t last = clock(), now = last;; now = clock()) {
 		clock_t LastTime = clock();
 		if (now - last >= FramesTime) {
@@ -623,8 +624,11 @@ int Game::play() {
 		char c = PlayerOperation(RenewFlames);
 		if (c == ESC)
 			break;
-		if (RenewFlames)
+		if (RenewFlames) {
+			if (player[0]->IsTouchedBottom() || player[1]->IsTouchedBottom())
+				TouchSound.PlaySoundEffect(TouchSoundPath[IsTouchSound], 1);
 			renderMap();
+		}
 		LastTime = clock() - LastTime;
 		if (OperationMode == 1 && FramesTime > LastTime) {
 			Sleep(FramesTime - LastTime);
@@ -643,8 +647,6 @@ int Game::play() {
 		/*
 		To render the map.
 		*/
-		if (player[0]->IsTouchedBottom() || player[1]->IsTouchedBottom())
-			TouchSound.PlaySoundEffect(TouchSoundPath[IsTouchSound],1);
 	}
 
 	while (_kbhit())

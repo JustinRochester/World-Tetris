@@ -7,7 +7,7 @@
 #include <io.h> 
 #include "PlaySound.h"
 #pragma comment(lib,"winmm.lib")
-//éŸ³ä¹çº¿ç¨‹
+//ÒôÀÖÏß³Ì
 unsigned int WINAPI PlayMusic::ThreadFunc(LPVOID lpParam)
 {
 	PlayMusic* _this = (PlayMusic*)lpParam;
@@ -19,17 +19,17 @@ unsigned int WINAPI PlayMusic::ThreadFunc(LPVOID lpParam)
 			mciSendString(_this->Close.c_str(), NULL, 0, 0);
 		}
 		char message[20];
-		mciSendString(_this->Status.c_str(), message, 20, 0);//è·å–éŸ³ä¹çŠ¶æ€
+		mciSendString(_this->Status.c_str(), message, 20, 0);//»ñÈ¡ÒôÀÖ×´Ì¬
 		std::string result(message);
 		if (result == "stopped") {
-			mciSendString(_this->Play.c_str(), NULL, 0, 0); //å¦‚æœéŸ³ä¹åœæ­¢ï¼Œé‡æ–°æ’­æ”¾
+			mciSendString(_this->Play.c_str(), NULL, 0, 0); //Èç¹ûÒôÀÖÍ£Ö¹£¬ÖØĞÂ²¥·Å
 			cnt++;
 		}
 		if (cnt == _this->times) {
 			break;
 		}
 	}
-	mciSendString(_this->Close.c_str(), NULL, 0, 0);	//å…³é—­éŸ³ä¹æ–‡ä»¶
+	mciSendString(_this->Close.c_str(), NULL, 0, 0);	//¹Ø±ÕÒôÀÖÎÄ¼ş
 	return 0;
 }
 
@@ -46,7 +46,7 @@ void PlayMusic::PlaySoundEffect(std::string path, int t)
 {
 	Sleep(10);
 	Stop = false;
-	times = t;
+	times = t + 1;
 	if (times <= 0) times = 2;
 	filepath = path;
 	Open = "OPEN BGM\\" + filepath + " ALIAS MUSIC";
