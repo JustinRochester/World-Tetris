@@ -1,13 +1,18 @@
 #include"Render.h"
 #include"FileRecoder.h"
+#include"PlaySound.h"
 
 #ifndef _GAME
 #define _GAME
 class Player;
 class Game {
 private:
-	Player *player[2];
+	Player* player[2];
 	Render render;
+	PlayMusic BGMMusic[11];//0-9分别表示模式0-9的BGM,10表示菜单界面的BGM
+	bool BGMOn[11];
+	std::string BGMPath[11];
+	int MusicMode;
 	FileRecoder fileRecoder;
 	int GameMode, CountPlayer, FramesCount, OperationMode;
 	bool PlayerAllow[2];
@@ -33,13 +38,13 @@ private:
 	char carryKeys1(bool&);
 	char PlayerOperation(bool&);
 	int play();
-	void addOtherLines(int,int);
-	void moveCur(int&,char);
+	void addOtherLines(int, int);
+	void moveCur(int&, char);
 
-public:	
-	Game();	
+public:
+	Game();
 	~Game();
 	void run();
 	void renderMap();
-}; 
+};
 #endif
