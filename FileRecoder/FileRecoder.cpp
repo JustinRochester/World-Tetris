@@ -37,7 +37,9 @@ FileRecoder::FileRecoder() {
 	for (int i = 0; i < 10; i++) {
 		iofile.open((FileName[i] + Suffix).c_str(), std::ios::in);
 		if (!iofile.is_open()) {
-			clearRecord(i);
+			iofile.open((FileName[i] + Suffix).c_str(), std::ios::out);
+			iofile << "Nobody" << std::endl << -1 << std::endl;
+			iofile.close();
 			iofile.open((FileName[i] + Suffix).c_str(), std::ios::in);
 		}
 		getline(iofile, NameRecoder[i]);
