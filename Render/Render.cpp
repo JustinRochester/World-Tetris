@@ -55,7 +55,7 @@ void Render::Setting(int Cur, bool SettingProperties[],int CountProperties) {
 
 void Render::Welcome(int Cur)	//游戏刚进去的界面	
 {
-	static char welcomeUI[] = { "◆■■■■■■■■\n■              ■\n■  我罗斯方块  ■\n■              ■\n■■■■■■■■■\n■              ■\n■   开始游戏   ■\n■              ■\n■   操作说明   ■\n■              ■\n■   开发人员   ■\n■              ■\n■   相关设置   ■\n■              ■\n■   退出游戏   ■\n■              ■\n■■■■■■■■◆\n" };
+	static char welcomeUI[] = { "◆■■■■■■■■\n■              ■\n■  我罗斯方块  ■\n■              ■\n■■■■■■■■■\n■              ■\n■   开始游戏   ■\n■              ■\n■   修改名称   ■\n■              ■\n■   操作说明   ■\n■              ■\n■   开发人员   ■\n■              ■\n■   相关设置   ■\n■              ■\n■   退出游戏   ■\n■              ■\n■■■■■■■■◆\n" };
 	system("cls");
 	SetColor(3);
 	/*if (Cur == 0) {
@@ -256,7 +256,48 @@ void Render::helpText(int GameMode)
 
 }
 
-void Render::historicRecord(const string &Name,int Score) {
+void Render::reName(const string& Name1, const string& Name2, int Cur) {
+	system("cls");
+	SetColor(3);
+
+	cout << "◆■■■■■■■■■■■■■■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 0)
+		cout << "■ >> 玩家1：               ■" << endl;
+	else
+		cout << "■    玩家1：               ■" << endl;
+	cout << "■                          ■" << endl;
+
+	if (Cur == 1)
+		cout << "■ >> 玩家1：               ■" << endl;
+	else
+		cout << "■    玩家1：               ■" << endl;
+	cout << "■                          ■" << endl;
+
+	if (Cur == 2)
+		cout << "■ >> 返回                  ■" << endl;
+	else
+		cout << "■    返回                  ■" << endl;
+	cout << "■                          ■" << endl;
+	cout << "■■■■■■■■■■■■■■◆" << endl;
+
+	SetPos(13, 2);
+	cout << Name1;
+	SetPos(13, 4);
+	cout << Name2;
+}
+
+void Render::reName(const string& Name1, const string& Name2) {
+	system("cls");
+	SetColor(3);
+	cout << "请输入16字符内的新姓名。按 ENTER 键确认，ESC 键返回" << endl;
+	cout << endl;
+	cout << "原名称：" << Name1 << endl;
+	cout << endl;
+	cout << "新名称：" << Name2 << endl;
+}
+
+void Render::historicRecord(const string& Name, int Score, int Cur) {
 	system("cls");
 	cout << "◆■■■■■■■■■■■■■■" << endl;
 	cout << "■                          ■" << endl;
@@ -267,7 +308,14 @@ void Render::historicRecord(const string &Name,int Score) {
 	cout << "■                          ■" << endl;
 	cout << "■■■■■■■■■■■■■■◆" << endl;
 	cout << endl;
-	cout << ">> ^返回^" << endl;
+	if(Cur==0)
+		cout << ">> 返回" << endl;
+	else
+		cout << "   返回" << endl;
+	if (Cur == 1)
+		cout << ">> 清除记录" << endl;
+	else
+		cout << "   清除记录" << endl;
 	int Pos = 30 - Name.size();
 	Pos >>= 1;
 	if (Pos & 1) Pos ^= 1;
@@ -290,21 +338,26 @@ void Render::PreStart(int Cur)
 	cout << "■         开始游戏         ■" << endl;
 	cout << "■                          ■" << endl;
 	if (Cur == 1)
+		cout << "■      >> 修改名称         ■" << endl;
+	else
+		cout << "■         修改名称         ■" << endl;
+	cout << "■                          ■" << endl;
+	if (Cur == 2)
 	cout << "■      >> 查看帮助         ■" << endl;
 	else
 	cout << "■         查看帮助         ■" << endl;
 	cout << "■                          ■" << endl;
-	if (Cur == 2)
+	if (Cur == 3)
 		cout << "■      >> 历史记录         ■" << endl;
 	else
 		cout << "■         历史记录         ■" << endl;
 	cout << "■                          ■" << endl;
-	if (Cur == 3)
+	if (Cur == 4)
 	cout << "■      >> 更换模式         ■" << endl;
 	else
 	cout << "■         更换模式         ■" << endl;
 	cout << "■                          ■" << endl;
-	if (Cur == 4)
+	if (Cur == 5)
 	cout << "■      >> 退出游戏         ■" << endl;
 	else
 	cout << "■         退出游戏         ■" << endl;
@@ -327,18 +380,6 @@ void Render::End(int Cur, int num, const string& player1, int score1, const stri
 	for (int i = 1; i <= num; i++)
 		for (int j = 1; j <= 3; j++)
 			cout << "■                          ■" << endl;
-	SetPos(11, 7);
-	cout << player1 << "：";
-	SetPos(13, 8);
-	cout << score1 << "分";
-	SetPos(0, 10);
-	if (num == 2) {
-		SetPos(11, 10);
-		cout << player2 << "：";
-		SetPos(13, 11);
-		cout << score2 << "分";
-		SetPos(0, 13);
-	}
 	if (Cur == 0)
 	cout << "■      >> 重新游戏         ■" << endl;
 	else
@@ -361,6 +402,24 @@ void Render::End(int Cur, int num, const string& player1, int score1, const stri
 	cout << "■                          ■" << endl;
 	cout << "■                          ■" << endl;
 	cout << "■■■■■■■■■■■■■■◆" << endl;
+
+	int Pos = 30 - player1.size();
+	Pos >>= 1;
+	if (Pos & 1) Pos ^= 1;
+	SetPos(Pos, 7);
+	cout << player1 << "：";
+	SetPos(13, 8);
+	cout << score1 << "分";
+	SetPos(0, 10);
+	if (num == 2) {
+		Pos = 30 - player2.size();
+		Pos >>= 1;
+		if (Pos & 1) Pos ^= 1;
+		SetPos(Pos, 10);
+		cout << player2 << "：";
+		SetPos(13, 11);
+		cout << score2 << "分";
+	}
 }
 
 void Render::SetColor(int color_num)//设置颜色

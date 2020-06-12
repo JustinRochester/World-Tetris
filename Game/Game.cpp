@@ -15,6 +15,7 @@ const char Game::DOWN = 80;
 const char Game::DIRECTIONS = 224;
 const char Game::ESC = 27;
 const char Game::ENTER = 13;
+const char Game::BACKSPACE = 8;
 
 Game::Game() {
 	FramesCount = 0;
@@ -47,29 +48,43 @@ bool Game::welcome() {
 			else if (Cur == 0)
 				return 1;
 			else if (Cur == 1)
-				explain();
+				reName();
 			else if (Cur == 2)
+				explain();
+			else if (Cur == 3)
 				participants();
-			else if (Cur == 3) {
+			else if (Cur == 4) {
 				Setting();
 				fileRecoder.OperationMode = OperationMode;
 				fileRecoder.outputData();
 			}
-			else if (Cur == 4)
+			else if (Cur == 5)
 				return 0;
 		}
 		moveCur(Cur, c);
-		Cur = (Cur % 5 + 5) % 5;
+		Cur = (Cur % 6 + 6) % 6;
 	}
 }
 
 void Game::historicRecord() {
 	int Cur = 0;
 	while (1) {
-		render.historicRecord(fileRecoder.NameRecoder[GameMode],fileRecoder.ScoreRecoder[GameMode]);
+		int Score = fileRecoder.ScoreRecoder[GameMode];
+		if (Score < 0) Score = 0;
+		render.historicRecord(fileRecoder.NameRecoder[GameMode], Score, Cur);
 		char c = _getch();
-		if (c == ESC || c == ENTER)
+		if (0);
+		else if (c == ESC)
 			return;
+		else if (c == ENTER) {
+			if (0);
+			else if (Cur == 0) return;
+			else if (Cur == 1) fileRecoder.clearRecord(GameMode);
+		}
+		else {
+			moveCur(Cur, c);
+			Cur = (Cur % 2 + 2) % 2;
+		}
 	}
 }
 
@@ -93,6 +108,61 @@ void Game::Setting() {
 		}
 		moveCur(Cur, c);
 		Cur = (Cur % 2 + 2) % 2;
+	}
+}
+
+void Game::reName(int ID) {
+	std::string tmp="";
+	bool isTooLong = 0;
+	while (1) {
+		if(!isTooLong)
+			render.reName(fileRecoder.NamePlayer[ID], tmp);
+		else {
+			render.reName(fileRecoder.NamePlayer[ID], "(Ãû×Ö¹ý³¤)");
+			isTooLong = 0;
+		}
+		char c = _getch();
+		if (0);
+		else if (c == DIRECTIONS) {
+			c = _getch();
+			if (c == UP)
+				tmp = fileRecoder.NamePlayer[ID];
+		}
+		else if (c == ESC)
+			return;
+		else if (c == ENTER) {
+			if (tmp.size() < 16)
+				fileRecoder.NamePlayer[ID] = tmp;
+			else
+				isTooLong = 1;
+			tmp = "";
+		}
+		else if (c == BACKSPACE) {
+			if(tmp.size())
+				tmp.pop_back();
+		}
+		else if (isalnum(c))
+			tmp += c;
+	}
+}
+
+void Game::reName() {
+	int Cur = 0;
+	while (1) {
+		render.reName(fileRecoder.NamePlayer[0], fileRecoder.NamePlayer[1], Cur);
+		char c = _getch();
+		if (0);
+		else if (c == ESC)
+			return;
+		else if (c == ENTER) {
+			if (Cur == 2)
+				return;
+			reName(Cur);
+		}
+		else {
+			moveCur(Cur, c);
+			Cur = (Cur % 3 + 3) % 3;
+		}
 	}
 }
 
@@ -344,21 +414,25 @@ int Game::preStart() {
 			else if (Cur == 0)
 				return 0;
 			else if (Cur == 1) {
-				helpText();
+				reName();
 				continue;
 			}
 			else if (Cur == 2) {
+				helpText();
+				continue;
+			}
+			else if (Cur == 3) {
 				historicRecord();
 				continue;
 			}
-			else if (Cur == 3)
-				return 1;
 			else if (Cur == 4)
+				return 1;
+			else if (Cur == 5)
 				return 3;
 		}
 		else {
 			moveCur(Cur, c);
-			Cur = (Cur % 5 + 5) % 5;
+			Cur = (Cur % 6 + 6) % 6;
 		}
 	}
 }
@@ -370,7 +444,7 @@ int Game::End() {
 	else if (CountPlayer == 2)
 		fileRecoder.update(
 			GameMode,
-			(player[1]->getScore() >= player[0]->getScore()) << 1 | (player[0]->getScore() >= player[0]->getScore()),
+			(player[1]->getScore() >= player[0]->getScore()) << 1 | (player[0]->getScore() >= player[1]->getScore()),
 			(player[0]->getScore() >= player[1]->getScore()) ? player[0]->getScore() : player[1]->getScore()
 		);
 	render.SetColor(5);

@@ -12,7 +12,7 @@ private:
 	int GameMode, CountPlayer, FramesCount, OperationMode;
 	bool PlayerAllow[2];
 	static int FramesTime;
-	static const char ESC, LEFT, RIGHT, UP, DOWN, DIRECTIONS, ENTER;
+	static const char ESC, LEFT, RIGHT, UP, DOWN, DIRECTIONS, ENTER, BACKSPACE;
 
 	void explain();
 	void participants();
@@ -23,6 +23,8 @@ private:
 	int preStart();
 	int End();
 	void Setting();
+	void reName();
+	void reName(int);
 
 	static bool isKeyDown(short);
 

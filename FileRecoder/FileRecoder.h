@@ -13,6 +13,7 @@ private:
 	friend class Game;
 
 public:
+	void clearRecord(int);
 	void update(int, int, int);
 	void outputData();
 	FileRecoder();

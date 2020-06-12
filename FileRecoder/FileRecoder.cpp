@@ -22,34 +22,39 @@ void FileRecoder::update(int GameMode, int PlayerState, int Score) {
 	if (0);
 	else if (PlayerState == 1) NameRecoder[GameMode] = NamePlayer[0];
 	else if (PlayerState == 2) NameRecoder[GameMode] = NamePlayer[1];
-	else if (PlayerState == 3) NameRecoder[GameMode] = NamePlayer[0] + "&" + NamePlayer[1];
+	else if (PlayerState == 3) NameRecoder[GameMode] = NamePlayer[0] + " & " + NamePlayer[1];
+	outputData();
+}
+
+void FileRecoder::clearRecord(int GameMode) {
+	NameRecoder[GameMode] = "Nobody";
+	ScoreRecoder[GameMode] = -1;
 	outputData();
 }
 
 FileRecoder::FileRecoder() {
-	std::string tmp="Nobody 0";
 	std::fstream iofile;
 	for (int i = 0; i < 10; i++) {
 		iofile.open((FileName[i] + Suffix).c_str(), std::ios::in);
 		if (!iofile.is_open()) {
-			iofile.open((FileName[i] + Suffix).c_str(), std::ios::out);
-			iofile << tmp;
-			iofile.close();
+			clearRecord(i);
 			iofile.open((FileName[i] + Suffix).c_str(), std::ios::in);
 		}
-		iofile >> NameRecoder[i] >> ScoreRecoder[i];
+		getline(iofile, NameRecoder[i]);
+		iofile >> ScoreRecoder[i];
 		iofile.close();
 	}
 
-	tmp = "Player1 Player2 0";
 	iofile.open((FileName[10] + Suffix).c_str(), std::ios::in);
 	if (!iofile.is_open()) {
 		iofile.open((FileName[10] + Suffix).c_str(), std::ios::out);
-		iofile << tmp;
+		iofile << "Player1" << std::endl << "Player2" << std::endl << 0 << std::endl;
 		iofile.close();
 		iofile.open((FileName[10] + Suffix).c_str(), std::ios::in);
 	}
-	iofile >> NamePlayer[0] >> NamePlayer[1] >> OperationMode;
+	getline(iofile, NamePlayer[0]);
+	getline(iofile, NamePlayer[1]);
+	iofile >> OperationMode;
 	iofile.close();
 }
 
@@ -57,14 +62,12 @@ void FileRecoder::outputData() {
 	std::fstream iofile;
 	for (int i = 0; i < 10; i++) {
 		iofile.open((FileName[i] + Suffix).c_str(), std::ios::out);
-		iofile << NameRecoder[i]<<" "<<ScoreRecoder[i];
+		iofile << NameRecoder[i]<<std::endl<<ScoreRecoder[i]<<std::endl;
 		iofile.close();
 	}
 
 	iofile.open((FileName[10] + Suffix).c_str(), std::ios::out);
-	for (int i = 0; i < 2; i++)
-		iofile << NamePlayer[i] << " ";
-	iofile << OperationMode << std::endl;
+	iofile << NamePlayer[0] << std::endl << NamePlayer[1] << std::endl << OperationMode << std::endl;
 	iofile.close();
 }
 
