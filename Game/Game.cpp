@@ -1,5 +1,6 @@
 #include"Game.h"
 #include"Player.h"
+#include"PlaySound.h"
 #include<conio.h>
 #include<windows.h>
 #include<ctime>
@@ -25,6 +26,20 @@ Game::Game() {
 	player[0] = player[1] = NULL;
 	CountPlayer = 0;
 	GameMode = 0;
+	for (int i = 0; i <= 10; i++) {
+		BGMOn[i] = false;
+	}
+	BGMPath[0] = "Yequ.mp3";
+	BGMPath[1] = "ChinaX.mp3";
+	BGMPath[2] = "FCTetris1.mp3";
+	BGMPath[3] = "victory.mp3";
+	BGMPath[4] = "TOW.mp3";
+	BGMPath[5] = "BGM1.mp3";
+	BGMPath[6] = "Tetris2.mp3";
+	BGMPath[7] = "monody.mp3";
+	BGMPath[8] = "intro.mp3";
+	BGMPath[9] = "TheMass.mp3";
+	BGMPath[10] = "FCTetris.mp3";
 }
 
 Game::~Game() {
@@ -37,6 +52,10 @@ Game::~Game() {
 }
 
 bool Game::welcome() {
+	if (!BGMOn[10]) {
+		BGMMusic[10].PlaySoundEffect(BGMPath[10]);
+		BGMOn[10] = true;
+	}
 	int Cur = 0;
 	while (1) {
 		render.Welcome(Cur);
@@ -112,13 +131,13 @@ void Game::Setting() {
 }
 
 void Game::reName(int ID) {
-	std::string tmp="";
+	std::string tmp = "";
 	bool isTooLong = 0;
 	while (1) {
-		if(!isTooLong)
+		if (!isTooLong)
 			render.reName(fileRecoder.NamePlayer[ID], tmp);
 		else {
-			render.reName(fileRecoder.NamePlayer[ID], "(名字过长)");
+			render.reName(fileRecoder.NamePlayer[ID], "(脙没脳脰鹿媒鲁陇)");
 			isTooLong = 0;
 		}
 		char c = _getch();
@@ -138,7 +157,7 @@ void Game::reName(int ID) {
 			tmp = "";
 		}
 		else if (c == BACKSPACE) {
-			if(tmp.size())
+			if (tmp.size())
 				tmp.pop_back();
 		}
 		else if (isalnum(c))
@@ -531,7 +550,10 @@ int Game::play() {
 	PlayerAllow[0] = PlayerAllow[1] = 1;
 
 	double SumTime = 0, CntTime = 0;
-
+	BGMOn[10] = false;
+	BGMMusic[10].StopSoundEffect();
+	BGMMusic[GameMode].StopSoundEffect();
+	BGMMusic[GameMode].PlaySoundEffect(BGMPath[GameMode]);
 	for (clock_t last = clock(), now = last;; now = clock()) {
 		clock_t LastTime = clock();
 		if (now - last >= FramesTime) {
@@ -590,7 +612,6 @@ int Game::play() {
 
 	while (_kbhit())
 		_getch();
-
 	return End();
 }
 void Game::run() {
@@ -606,6 +627,12 @@ void Game::run() {
 			while (Res == 0) {
 				setGameMode(GameMode);
 				Res = play();
+			}
+			BGMOn[GameMode] = false;
+			BGMMusic[GameMode].StopSoundEffect();
+			if (BGMOn[10] == false) {
+				BGMOn[10] = true;
+				BGMMusic[10].PlaySoundEffect(BGMPath[10]);
 			}
 			if (Res == 1)
 				continue;
