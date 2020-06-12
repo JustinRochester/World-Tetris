@@ -51,13 +51,13 @@ FileRecoder::FileRecoder() {
 	if (!iofile.is_open()) {
 		iofile.open((FileName[10] + Suffix).c_str(), std::ios::out);
 		iofile << "Player1" << std::endl << "Player2" << std::endl;
-		iofile << 0 << std::endl << 1 << std::endl << 1 << std::endl << 1 << std::endl;
+		iofile << 0 << std::endl << 1 << std::endl << 1 << std::endl;
 		iofile.close();
 		iofile.open((FileName[10] + Suffix).c_str(), std::ios::in);
 	}
 	getline(iofile, NamePlayer[0]);
 	getline(iofile, NamePlayer[1]);
-	iofile >> OperationMode >> IsBackgroundMusicOn >> IsKeySound >> IsTouchSound;
+	iofile >> OperationMode >> IsBackgroundMusicOn >> IsSoundEffect;
 	iofile.close();
 }
 
@@ -71,7 +71,7 @@ void FileRecoder::outputData() {
 
 	iofile.open((FileName[10] + Suffix).c_str(), std::ios::out);
 	iofile << NamePlayer[0] << std::endl << NamePlayer[1] << std::endl;
-	iofile << OperationMode << std::endl << IsBackgroundMusicOn << std::endl << IsKeySound << std::endl << IsTouchSound << std::endl;
+	iofile << OperationMode << std::endl << IsBackgroundMusicOn << std::endl << IsSoundEffect << std::endl;
 	iofile.close();
 }
 

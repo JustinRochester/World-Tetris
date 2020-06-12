@@ -200,59 +200,6 @@ void Brick::rotateBrick() {
 		BrickType = ((BrickType >> 2) << 2) | ((BrickType + 1) & 3);
 		if (BrickType > 8) BrickType -= 3;
 		BrickType++;
-		/*switch (BrickType) {
-		case 1:
-			BrickType = 2;
-			break;
-		case 2:
-			BrickType = 3;
-			break;
-		case 3:
-			BrickType = 4;
-			break;
-		case 4:
-			BrickType = 1;
-			break;
-		case 5:
-			BrickType = 6;
-			break;
-		case 6:
-			BrickType = 7;
-			break;
-		case 7:
-			BrickType = 8;
-			break;
-		case 8:
-			BrickType = 5;
-			break;
-		case 9:
-			BrickType = 9;
-			break;
-		case 10:
-			BrickType = 11;
-			break;
-		case 11:
-			BrickType = 12;
-			break;
-		case 12:
-			BrickType = 13;
-			break;
-		case 13:
-			BrickType = 10;
-			break;
-		case 14:
-			BrickType = 15;
-			break;
-		case 15:
-			BrickType = 16;
-			break;
-		case 16:
-			BrickType = 17;
-			break;
-		case 17:
-			BrickType = 14;
-			break;
-		}*/
 	}
 	brickSet(x, y);
 }

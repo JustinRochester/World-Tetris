@@ -7,9 +7,11 @@ class Game;
 class FileRecoder {
 private:
 	static const std::string Suffix, FileName[11];
+
 	std::string NamePlayer[2], NameRecoder[10];
 	int ScoreRecoder[10];
-	int OperationMode, IsBackgroundMusicOn, IsKeySound, IsTouchSound;
+	int OperationMode, IsBackgroundMusicOn, IsSoundEffect;
+
 	friend class Game;
 
 public:

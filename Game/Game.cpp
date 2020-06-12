@@ -7,7 +7,7 @@
 #include<cstdlib>
 #include<iostream>
 
-int Game::FramesTime = 25;
+const int Game::FramesTime = 25;
 
 const char Game::UP = 72;
 const char Game::LEFT = 75;
@@ -17,11 +17,9 @@ const char Game::DIRECTIONS = 224;
 const char Game::ESC = 27;
 const char Game::ENTER = 13;
 const char Game::BACKSPACE = 8;
-const std::string Game::TouchSoundPath[] = {
-	"","TouchSound.mp3"
-};
-const std::string Game::KeySoundPath[] = {
-	"","TouchSound.mp3"
+const std::string Game::SoundEffectPath[2][2] = {
+	"","TouchSound.wav",
+	"","UISound.wav"
 };
 const std::string Game::BGMPath[11][2] = {
 	"","Yequ.mp3",
@@ -42,8 +40,7 @@ Game::Game() {
 
 	OperationMode = fileRecoder.OperationMode;
 	IsBackgroundMusicOn = fileRecoder.IsBackgroundMusicOn;
-	IsKeySound = fileRecoder.IsKeySound;
-	IsTouchSound = fileRecoder.IsTouchSound;
+	IsSoundEffect = fileRecoder.IsSoundEffect;
 
 	render.HideCursor();
 	render.SetTitle();
@@ -58,13 +55,33 @@ Game::Game() {
 Game::~Game() {
 	fileRecoder.OperationMode = OperationMode;
 	fileRecoder.IsBackgroundMusicOn = IsBackgroundMusicOn;
-	fileRecoder.IsKeySound = IsKeySound;
-	fileRecoder.IsTouchSound = IsTouchSound;
+	fileRecoder.IsSoundEffect = IsSoundEffect;
 	for (int i = 0; i < 2; i++)
 		if (player[i] != NULL) {
 			delete player[i];
 			player[i] = NULL;
 		}
+}
+
+bool Game::isKeyDown(short VK_VALUE) {
+	return GetAsyncKeyState(VK_VALUE) < 0;
+}
+
+void Game::moveCur(int& NowCur, char Command) {
+	if (0);
+	else if (Command >= '0' && Command <= '9')
+		NowCur = (Command - 48);
+	else if (Command == '-' || Command == 'W' || Command == 'w')
+		NowCur--;
+	else if (Command == '+' || Command == 'S' || Command == 's')
+		NowCur++;
+	else if (Command == DIRECTIONS) {
+		Command = _getch();
+		if (Command == UP)
+			NowCur--;
+		else if (Command == DOWN)
+			NowCur++;
+	}
 }
 
 bool Game::welcome() {
@@ -92,8 +109,7 @@ bool Game::welcome() {
 				Setting();
 				fileRecoder.OperationMode = OperationMode;
 				fileRecoder.IsBackgroundMusicOn = IsBackgroundMusicOn;
-				fileRecoder.IsKeySound = IsKeySound;
-				fileRecoder.IsTouchSound = IsTouchSound;
+				fileRecoder.IsSoundEffect = IsSoundEffect;
 				fileRecoder.outputData();
 			}
 			else if (Cur == 5)
@@ -104,64 +120,62 @@ bool Game::welcome() {
 	}
 }
 
-void Game::historicRecord() {
+void Game::setGameMode(int Cur) {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
+	/*
+	This method is used to choose the game mode.
+	It will choose the game mode Cur if the Cur is no less than 0, which means restart this game mode.
+	*/
+
+	for (int i = 0; i < 2; i++)
+		if (player[i] != NULL) {
+			delete player[i];
+			player[i] = NULL;
+		}
+	CountPlayer = 0;
+
+	if (Cur < 0) {
+		Cur = 0;
+		while (1) {
+			render.GameModeMenu(Cur);
+
+			char c = _getch();
+			if (c == ESC)
+				return;
+			if (c == ENTER)
+				break;
+			moveCur(Cur, c);
+			Cur = (Cur % 10 + 10) % 10;
+		}
+	}
+	CountPlayer = (Cur > 3) + 1;
+	GameMode = Cur;
+
+	for (int i = 0; i < 2; i++)
+		if (i < CountPlayer)
+			player[i] = new Player(1);
+		else
+			player[i] = new Player(0);
+}
+
+void Game::reName() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
 	int Cur = 0;
 	while (1) {
-		int Score = fileRecoder.ScoreRecoder[GameMode];
-		if (Score < 0) Score = 0;
-		render.historicRecord(fileRecoder.NameRecoder[GameMode], Score, Cur);
+		render.reName(fileRecoder.NamePlayer[0], fileRecoder.NamePlayer[1], Cur);
 		char c = _getch();
 		if (0);
 		else if (c == ESC)
 			return;
 		else if (c == ENTER) {
-			if (0);
-			else if (Cur == 0) return;
-			else if (Cur == 1) fileRecoder.clearRecord(GameMode);
+			if (Cur == 2)
+				return;
+			reName(Cur);
 		}
 		else {
 			moveCur(Cur, c);
-			Cur = (Cur % 2 + 2) % 2;
+			Cur = (Cur % 3 + 3) % 3;
 		}
-	}
-}
-
-void Game::Setting() {
-	static int CountProperties = 4;
-	bool Properties[] = { OperationMode , IsBackgroundMusicOn , IsKeySound , IsTouchSound  };
-	int Cur = 0;
-	while (1) {
-		render.Setting(Cur, Properties, CountProperties);
-		char c = _getch();
-		if (c == ESC) {
-			OperationMode = ((Properties[0]) ? 1 : 0);
-			IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
-			IsKeySound = ((Properties[2]) ? 1 : 0);
-			IsTouchSound = ((Properties[3]) ? 1 : 0);
-			return;
-		}
-		if (c == ENTER) {
-			if (Cur == CountProperties) {
-				OperationMode = ((Properties[0]) ? 1 : 0);
-				IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
-				IsKeySound = ((Properties[2]) ? 1 : 0);
-				IsTouchSound = ((Properties[3]) ? 1 : 0);
-				return;
-			}
-			Properties[Cur] ^= 1;
-			if (Cur == 1) {
-				if (!Properties[Cur]) {
-					BGMOn[10] = false;
-					BGMMusic[10].StopSoundEffect();
-				}
-				else {
-					BGMMusic[10].PlaySoundEffect(BGMPath[10][1]);
-					BGMOn[10] = true;
-				}
-			}
-		}
-		moveCur(Cur, c);
-		Cur = (Cur % 5 + 5) % 5;
 	}
 }
 
@@ -200,37 +214,8 @@ void Game::reName(int ID) {
 	}
 }
 
-void Game::reName() {
-	int Cur = 0;
-	while (1) {
-		render.reName(fileRecoder.NamePlayer[0], fileRecoder.NamePlayer[1], Cur);
-		char c = _getch();
-		if (0);
-		else if (c == ESC)
-			return;
-		else if (c == ENTER) {
-			if (Cur == 2)
-				return;
-			reName(Cur);
-		}
-		else {
-			moveCur(Cur, c);
-			Cur = (Cur % 3 + 3) % 3;
-		}
-	}
-}
-
-void Game::helpText() {
-	int Cur = 0;
-	while (1) {
-		render.helpText(GameMode);
-		char c = _getch();
-		if (c == ESC || c == ENTER)
-			return;
-	}
-}
-
 void Game::explain() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
 	int Cur = 0;
 	while (1) {
 		render.Explain();
@@ -241,6 +226,7 @@ void Game::explain() {
 }
 
 void Game::participants() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
 	int Cur = 0;
 	while (1) {
 		render.Participants();
@@ -250,107 +236,140 @@ void Game::participants() {
 	}
 }
 
-void Game::renderMap() {
-	/*
-	This method is used to draw the game map.
-	*/
-	int Map[2][32][12] = { 0 }, Infor1[2][9] = { 0 }, Infor2[2][9] = { 0 };
-	if (CountPlayer == 0)
-		return;
-	for (int p = 0; p < CountPlayer; p++) {
-		for (int* NowState = player[p]->NowBrick.getInformation(), i = 0; i < 9; i++, NowState++)
-			Infor1[p][i] = *NowState;
-		for (int* NextState = player[p]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
-			Infor2[p][i] = *NextState;
-
-		if (player[p]->GameOver) {
-			Infor1[p][0] = 10;
-			Infor2[p][0] = 10;
-			continue;
+void Game::Setting() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
+	static int CountProperties = 3;
+	bool Properties[] = { OperationMode , IsBackgroundMusicOn , IsSoundEffect };
+	int Cur = 0;
+	while (1) {
+		render.Setting(Cur, Properties, CountProperties);
+		char c = _getch();
+		if (c == ESC) {
+			OperationMode = ((Properties[0]) ? 1 : 0);
+			IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
+			IsSoundEffect = ((Properties[2]) ? 1 : 0);
+			return;
 		}
-
-		for (int i = 1; i <= 30; i++)
-			for (int j = 1; j <= 10; j++)
-				if (player[p]->MapSqure[i][j])
-					Map[p][i][j] = -1;
-	}
-
-	if (0);
-	else if (CountPlayer == 1) {
-		render.DrawScore1(player[0]->CountScore);
-		render.DrawGame1(Map[0], Infor1[0], Infor2[0]);
-	}
-	else if (CountPlayer == 2) {
-		render.DrawScore2(player[0]->CountScore, player[1]->CountScore);
-		render.DrawGame2(Map[0], Infor1[0], Infor2[0], Map[1], Infor1[1], Infor2[1]);
-	}
-}
-
-void Game::moveCur(int& NowCur, char Command) {
-	if (0);
-	else if (Command >= '0' && Command <= '9')
-		NowCur = (Command - 48);
-	else if (Command == '-' || Command == 'W' || Command == 'w')
-		NowCur--;
-	else if (Command == '+' || Command == 'S' || Command == 's')
-		NowCur++;
-	else if (Command == DIRECTIONS) {
-		Command = _getch();
-		if (Command == UP)
-			NowCur--;
-		else if (Command == DOWN)
-			NowCur++;
-	}
-}
-
-void Game::setGameMode(int Cur) {
-	/*
-	This method is used to choose the game mode.
-	It will choose the game mode Cur if the Cur is no less than 0, which means restart this game mode.
-	*/
-
-	for (int i = 0; i < 2; i++)
-		if (player[i] != NULL) {
-			delete player[i];
-			player[i] = NULL;
-		}
-	CountPlayer = 0;
-
-	if (Cur < 0) {
-		Cur = 0;
-		while (1) {
-			render.GameModeMenu(Cur);
-
-			char c = _getch();
-			if (c == ESC)
+		if (c == ENTER) {
+			if (Cur == CountProperties) {
+				OperationMode = ((Properties[0]) ? 1 : 0);
+				IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
+				IsSoundEffect = ((Properties[2]) ? 1 : 0);
 				return;
-			if (c == ENTER)
-				break;
-			moveCur(Cur, c);
-			Cur = (Cur % 10 + 10) % 10;
+			}
+			Properties[Cur] ^= 1;
+			if (Cur == 1) {
+				if (!Properties[Cur]) {
+					BGMOn[10] = false;
+					BGMMusic[10].StopSoundEffect();
+				}
+				else {
+					BGMMusic[10].PlaySoundEffect(BGMPath[10][1]);
+					BGMOn[10] = true;
+				}
+			}
+			if (Cur == 2)
+				IsSoundEffect = ((Properties[2]) ? 1 : 0);
 		}
+		moveCur(Cur, c);
+		Cur = (Cur % 4 + 4) % 4;
 	}
-	CountPlayer = (Cur > 3) + 1;
-	GameMode = Cur;
-
-	for (int i = 0; i < 2; i++)
-		if (i < CountPlayer)
-			player[i] = new Player(1);
-		else
-			player[i] = new Player(0);
 }
 
-void Game::addOtherLines(int DeleteLinePlayer, int CountDeletedLine) {
-	/*
-	This method is work only in gamemode 8 or gamemode 9
-	It will add CountDeletedLine to player AddLinePlayer
-	*/
-	if (GameMode != 8 && GameMode != 9)
-		return;
-	int AddLinePlayer = DeleteLinePlayer ^ 1;
-	while (CountDeletedLine) {
-		CountDeletedLine = player[AddLinePlayer]->addLine(CountDeletedLine);
-		AddLinePlayer ^= 1;
+void Game::helpText() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
+	int Cur = 0;
+	while (1) {
+		render.helpText(GameMode);
+		char c = _getch();
+		if (c == ESC || c == ENTER)
+			return;
+	}
+}
+
+void Game::historicRecord() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
+	int Cur = 0;
+	while (1) {
+		int Score = fileRecoder.ScoreRecoder[GameMode];
+		if (Score < 0) Score = 0;
+		render.historicRecord(fileRecoder.NameRecoder[GameMode], Score, Cur);
+		char c = _getch();
+		if (0);
+		else if (c == ESC)
+			return;
+		else if (c == ENTER) {
+			if (0);
+			else if (Cur == 0) return;
+			else if (Cur == 1) fileRecoder.clearRecord(GameMode);
+		}
+		else {
+			moveCur(Cur, c);
+			Cur = (Cur % 2 + 2) % 2;
+		}
+	}
+}
+
+int Game::preStart() {
+	SoundEffect[1].PlaySoundEffect(SoundEffectPath[1][IsSoundEffect], 1);
+	int Cur = 0;
+	while (1) {
+		render.PreStart(Cur);
+		char c = _getch();
+		if (c == ESC)
+			return 1;
+		if (c == ENTER) {
+			if (0);
+			else if (Cur == 0)
+				return 0;
+			else if (Cur == 1) {
+				reName();
+				continue;
+			}
+			else if (Cur == 2) {
+				helpText();
+				continue;
+			}
+			else if (Cur == 3) {
+				historicRecord();
+				continue;
+			}
+			else if (Cur == 4)
+				return 1;
+			else if (Cur == 5)
+				return 3;
+		}
+		else {
+			moveCur(Cur, c);
+			Cur = (Cur % 6 + 6) % 6;
+		}
+	}
+}
+
+int Game::End() {
+	if (0);
+	else if (CountPlayer == 1)
+		fileRecoder.update(GameMode, 1, player[0]->getScore());
+	else if (CountPlayer == 2)
+		fileRecoder.update(
+			GameMode,
+			(player[1]->getScore() >= player[0]->getScore()) << 1 | (player[0]->getScore() >= player[1]->getScore()),
+			(player[0]->getScore() >= player[1]->getScore()) ? player[0]->getScore() : player[1]->getScore()
+		);
+	render.SetColor(5);
+	int Cur = 0;
+	render.End(Cur, CountPlayer, player[0]->getName(), player[0]->getScore(), player[1]->getName(), player[1]->getScore());
+	while (_kbhit())
+			_getch();
+	while (1) {
+		render.End(Cur, CountPlayer, player[0]->getName(), player[0]->getScore(), player[1]->getName(), player[1]->getScore());
+		char c = _getch();
+		if (c == ESC)
+			return 1;
+		if (c == ENTER)
+			return Cur;
+		moveCur(Cur, c);
+		Cur = (Cur % 4 + 4) % 4;
 	}
 }
 
@@ -456,69 +475,6 @@ bool Game::carryCommand(char c) {
 	return 0;
 }
 
-int Game::preStart() {
-	int Cur = 0;
-	while (1) {
-		render.PreStart(Cur);
-		char c = _getch();
-		if (c == ESC)
-			return 1;
-		if (c == ENTER) {
-			if (0);
-			else if (Cur == 0)
-				return 0;
-			else if (Cur == 1) {
-				reName();
-				continue;
-			}
-			else if (Cur == 2) {
-				helpText();
-				continue;
-			}
-			else if (Cur == 3) {
-				historicRecord();
-				continue;
-			}
-			else if (Cur == 4)
-				return 1;
-			else if (Cur == 5)
-				return 3;
-		}
-		else {
-			moveCur(Cur, c);
-			Cur = (Cur % 6 + 6) % 6;
-		}
-	}
-}
-
-int Game::End() {
-	if (0);
-	else if (CountPlayer == 1)
-		fileRecoder.update(GameMode, 1, player[0]->getScore());
-	else if (CountPlayer == 2)
-		fileRecoder.update(
-			GameMode,
-			(player[1]->getScore() >= player[0]->getScore()) << 1 | (player[0]->getScore() >= player[1]->getScore()),
-			(player[0]->getScore() >= player[1]->getScore()) ? player[0]->getScore() : player[1]->getScore()
-		);
-	render.SetColor(5);
-	int Cur = 0;
-	while (1) {
-		render.End(Cur, CountPlayer, player[0]->getName(), player[0]->getScore(), player[1]->getName(), player[1]->getScore());
-		char c = _getch();
-		if (c == ESC)
-			return 1;
-		if (c == ENTER)
-			return Cur;
-		moveCur(Cur, c);
-		Cur = (Cur % 4 + 4) % 4;
-	}
-}
-
-bool Game::isKeyDown(short VK_VALUE) {
-	return GetAsyncKeyState(VK_VALUE) < 0;
-}
-
 char Game::carryKeys0(bool& RenewFlames) {
 	static const short VK_W = 87, VK_S = 83, VK_A = 65, VK_D = 68;
 	static const short VK_VALUE[] = { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_W,VK_S,VK_A,VK_D };
@@ -571,7 +527,6 @@ int Game::play() {
 	if (Res != 0)
 		return Res;
 
-	//system("cls");
 	int FramesLimit = 1000 / FramesTime;
 	/*
 	Number FramesLimit is setted as the limits of FramesCount.
@@ -584,7 +539,6 @@ int Game::play() {
 	renderMap();
 	PlayerAllow[0] = PlayerAllow[1] = 1;
 
-	double SumTime = 0, CntTime = 0;
 	BGMOn[10] = false;
 	BGMMusic[10].StopSoundEffect();
 	BGMMusic[GameMode].StopSoundEffect();
@@ -626,15 +580,12 @@ int Game::play() {
 			break;
 		if (RenewFlames) {
 			if (player[0]->IsTouchedBottom() || player[1]->IsTouchedBottom())
-				TouchSound.PlaySoundEffect(TouchSoundPath[IsTouchSound], 1);
+				SoundEffect[0].PlaySoundEffect(SoundEffectPath[0][IsSoundEffect], 1);
 			renderMap();
 		}
 		LastTime = clock() - LastTime;
-		if (OperationMode == 1 && FramesTime > LastTime) {
+		if (OperationMode == 1 && FramesTime > LastTime) 
 			Sleep(FramesTime - LastTime);
-			SumTime += LastTime;
-			CntTime += 1;
-		}
 
 		if (GameMode == 2 || GameMode == 3 || GameMode == 6 || GameMode == 7 || GameMode == 9) {
 			FramesLimit = 1000 / FramesTime - (player[0]->getScore() + player[1]->getScore()) / 10;
@@ -649,9 +600,21 @@ int Game::play() {
 		*/
 	}
 
-	while (_kbhit())
-		_getch();
 	return End();
+}
+
+void Game::addOtherLines(int DeleteLinePlayer, int CountDeletedLine) {
+	/*
+	This method is work only in gamemode 8 or gamemode 9
+	It will add CountDeletedLine to player AddLinePlayer
+	*/
+	if (GameMode != 8 && GameMode != 9)
+		return;
+	int AddLinePlayer = DeleteLinePlayer ^ 1;
+	while (CountDeletedLine) {
+		CountDeletedLine = player[AddLinePlayer]->addLine(CountDeletedLine);
+		AddLinePlayer ^= 1;
+	}
 }
 void Game::run() {
 	while (1) {
@@ -680,5 +643,41 @@ void Game::run() {
 			if (Res == 3)
 				return;
 		}
+	}
+}
+
+void Game::renderMap() {
+	/*
+	This method is used to draw the game map.
+	*/
+	int Map[2][32][12] = { 0 }, Infor1[2][9] = { 0 }, Infor2[2][9] = { 0 };
+	if (CountPlayer == 0)
+		return;
+	for (int p = 0; p < CountPlayer; p++) {
+		for (int* NowState = player[p]->NowBrick.getInformation(), i = 0; i < 9; i++, NowState++)
+			Infor1[p][i] = *NowState;
+		for (int* NextState = player[p]->NextBrick.getInformation(), i = 0; i < 9; i++, NextState++)
+			Infor2[p][i] = *NextState;
+
+		if (player[p]->GameOver) {
+			Infor1[p][0] = 10;
+			Infor2[p][0] = 10;
+			continue;
+		}
+
+		for (int i = 1; i <= 30; i++)
+			for (int j = 1; j <= 10; j++)
+				if (player[p]->MapSqure[i][j])
+					Map[p][i][j] = -1;
+	}
+
+	if (0);
+	else if (CountPlayer == 1) {
+		render.DrawScore1(player[0]->CountScore);
+		render.DrawGame1(Map[0], Infor1[0], Infor2[0]);
+	}
+	else if (CountPlayer == 2) {
+		render.DrawScore2(player[0]->CountScore, player[1]->CountScore);
+		render.DrawGame2(Map[0], Infor1[0], Infor2[0], Map[1], Infor1[1], Infor2[1]);
 	}
 }
