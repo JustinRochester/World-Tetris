@@ -7,6 +7,7 @@ int Player::RIGHT_LIM = 10;
 int Player::LEFT_LIM = 1;
 Player::Player(bool StartGame) {
 	CountScore = 0;
+	TouchedBottom = 0;
 	for (int i = UP_LIM; i <= DOWN_LIM; i++)
 		for (int j = LEFT_LIM; j <= RIGHT_LIM; j++)
 			MapSqure[i][j] = 0;
@@ -123,6 +124,7 @@ void Player::addToMap() {
 	/*
 	This method is used to add the working brick into the map, which touches the bottom.
 	*/
+	TouchedBottom = 1;
 	const int* Information = NowBrick.getInformation();
 	for (int i = 1; i < 9; i += 2)
 		MapSqure[Information[i]][Information[i + 1]] = 1;
@@ -275,6 +277,7 @@ int Player::addLine(int CountLine) {
 	return CountDeleteLine;
 }
 int Player::run(int Direction) {
+	TouchedBottom = 0;
 	if (GameOver)
 		return 0;
 	/*
@@ -318,4 +321,7 @@ int Player::getScore() {
 }
 std::string Player::getName() {
 	return Name;
+}
+bool Player::IsTouchedBottom() {
+	return TouchedBottom;
 }

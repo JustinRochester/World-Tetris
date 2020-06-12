@@ -17,10 +17,34 @@ const char Game::DIRECTIONS = 224;
 const char Game::ESC = 27;
 const char Game::ENTER = 13;
 const char Game::BACKSPACE = 8;
+const std::string Game::TouchSoundPath[] = {
+	"","TouchSound.mp3"
+};
+const std::string Game::KeySoundPath[] = {
+	"",""
+};
+const std::string Game::BGMPath[11][2] = {
+	"","Yequ.mp3",
+	"","ChinaX.mp3",
+	"","FCTetris1.mp3",
+	"","victory.mp3",
+	"","TOW.mp3",
+	"","BGM1.mp3",
+	"","Tetris2.mp3",
+	"","monody.mp3",
+	"","intro.mp3",
+	"","TheMass.mp3",
+	"","FCTetris.mp3"
+};
 
 Game::Game() {
 	FramesCount = 0;
+
 	OperationMode = fileRecoder.OperationMode;
+	IsBackgroundMusicOn = fileRecoder.IsBackgroundMusicOn;
+	IsKeySound = fileRecoder.IsKeySound;
+	IsTouchSound = fileRecoder.IsTouchSound;
+
 	render.HideCursor();
 	render.SetTitle();
 	player[0] = player[1] = NULL;
@@ -29,21 +53,13 @@ Game::Game() {
 	for (int i = 0; i <= 10; i++) {
 		BGMOn[i] = false;
 	}
-	BGMPath[0] = "Yequ.mp3";
-	BGMPath[1] = "ChinaX.mp3";
-	BGMPath[2] = "FCTetris1.mp3";
-	BGMPath[3] = "victory.mp3";
-	BGMPath[4] = "TOW.mp3";
-	BGMPath[5] = "BGM1.mp3";
-	BGMPath[6] = "Tetris2.mp3";
-	BGMPath[7] = "monody.mp3";
-	BGMPath[8] = "intro.mp3";
-	BGMPath[9] = "TheMass.mp3";
-	BGMPath[10] = "FCTetris.mp3";
 }
 
 Game::~Game() {
 	fileRecoder.OperationMode = OperationMode;
+	fileRecoder.IsBackgroundMusicOn = IsBackgroundMusicOn;
+	fileRecoder.IsKeySound = IsKeySound;
+	fileRecoder.IsTouchSound = IsTouchSound;
 	for (int i = 0; i < 2; i++)
 		if (player[i] != NULL) {
 			delete player[i];
@@ -53,7 +69,7 @@ Game::~Game() {
 
 bool Game::welcome() {
 	if (!BGMOn[10]) {
-		BGMMusic[10].PlaySoundEffect(BGMPath[10]);
+		BGMMusic[10].PlaySoundEffect(BGMPath[10][IsBackgroundMusicOn]);
 		BGMOn[10] = true;
 	}
 	int Cur = 0;
@@ -75,6 +91,9 @@ bool Game::welcome() {
 			else if (Cur == 4) {
 				Setting();
 				fileRecoder.OperationMode = OperationMode;
+				fileRecoder.IsBackgroundMusicOn = IsBackgroundMusicOn;
+				fileRecoder.IsKeySound = IsKeySound;
+				fileRecoder.IsTouchSound = IsTouchSound;
 				fileRecoder.outputData();
 			}
 			else if (Cur == 5)
@@ -108,25 +127,41 @@ void Game::historicRecord() {
 }
 
 void Game::Setting() {
-	static int CountProperties = 1;
-	bool Properties[] = { OperationMode };
+	static int CountProperties = 4;
+	bool Properties[] = { OperationMode , IsBackgroundMusicOn , IsKeySound , IsTouchSound  };
 	int Cur = 0;
 	while (1) {
 		render.Setting(Cur, Properties, CountProperties);
 		char c = _getch();
 		if (c == ESC) {
 			OperationMode = ((Properties[0]) ? 1 : 0);
+			IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
+			IsKeySound = ((Properties[2]) ? 1 : 0);
+			IsTouchSound = ((Properties[3]) ? 1 : 0);
 			return;
 		}
 		if (c == ENTER) {
 			if (Cur == CountProperties) {
 				OperationMode = ((Properties[0]) ? 1 : 0);
+				IsBackgroundMusicOn = ((Properties[1]) ? 1 : 0);
+				IsKeySound = ((Properties[2]) ? 1 : 0);
+				IsTouchSound = ((Properties[3]) ? 1 : 0);
 				return;
 			}
 			Properties[Cur] ^= 1;
+			if (Cur == 1) {
+				if (!Properties[Cur]) {
+					BGMOn[10] = false;
+					BGMMusic[10].StopSoundEffect();
+				}
+				else {
+					BGMMusic[10].PlaySoundEffect(BGMPath[10][1]);
+					BGMOn[10] = true;
+				}
+			}
 		}
 		moveCur(Cur, c);
-		Cur = (Cur % 2 + 2) % 2;
+		Cur = (Cur % 5 + 5) % 5;
 	}
 }
 
@@ -137,7 +172,7 @@ void Game::reName(int ID) {
 		if (!isTooLong)
 			render.reName(fileRecoder.NamePlayer[ID], tmp);
 		else {
-			render.reName(fileRecoder.NamePlayer[ID], "(脙没脳脰鹿媒鲁陇)");
+			render.reName(fileRecoder.NamePlayer[ID], "(名字过长)");
 			isTooLong = 0;
 		}
 		char c = _getch();
@@ -553,7 +588,7 @@ int Game::play() {
 	BGMOn[10] = false;
 	BGMMusic[10].StopSoundEffect();
 	BGMMusic[GameMode].StopSoundEffect();
-	BGMMusic[GameMode].PlaySoundEffect(BGMPath[GameMode]);
+	BGMMusic[GameMode].PlaySoundEffect(BGMPath[GameMode][IsBackgroundMusicOn]);
 	for (clock_t last = clock(), now = last;; now = clock()) {
 		clock_t LastTime = clock();
 		if (now - last >= FramesTime) {
@@ -608,6 +643,8 @@ int Game::play() {
 		/*
 		To render the map.
 		*/
+		if (player[0]->IsTouchedBottom() || player[1]->IsTouchedBottom())
+			TouchSound.PlaySoundEffect(TouchSoundPath[IsTouchSound],1);
 	}
 
 	while (_kbhit())
@@ -632,7 +669,7 @@ void Game::run() {
 			BGMMusic[GameMode].StopSoundEffect();
 			if (BGMOn[10] == false) {
 				BGMOn[10] = true;
-				BGMMusic[10].PlaySoundEffect(BGMPath[10]);
+				BGMMusic[10].PlaySoundEffect(BGMPath[10][IsBackgroundMusicOn]);
 			}
 			if (Res == 1)
 				continue;

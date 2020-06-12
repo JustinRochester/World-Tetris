@@ -41,7 +41,7 @@ void SetPos(short i, short j)			//控制光标位置 列 行
 
 
 void Render::Setting(int Cur, bool SettingProperties[],int CountProperties) {
-	static char SettingUI[] = { "◆■■■■■■■■■■\n■                  ■\n■    允许长按：    ■\n■                  ■\n■    返回          ■\n■                  ■\n■■■■■■■■■■◆\n" };
+	static char SettingUI[] = { "◆■■■■■■■■■■\n■                  ■\n■    允许长按：    ■\n■                  ■\n■    背景音乐：    ■\n■                  ■\n■    按键音效：    ■\n■                  ■\n■    触底音效：    ■\n■                  ■\n■    返回          ■\n■                  ■\n■■■■■■■■■■◆\n" };
 	system("cls");
 	fwrite(SettingUI, 1, sizeof(SettingUI), stdout);
 	for (int i = 0; i < CountProperties; i++) {

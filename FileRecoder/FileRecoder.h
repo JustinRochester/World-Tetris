@@ -9,7 +9,7 @@ private:
 	static const std::string Suffix, FileName[11];
 	std::string NamePlayer[2], NameRecoder[10];
 	int ScoreRecoder[10];
-	int OperationMode;
+	int OperationMode, IsBackgroundMusicOn, IsKeySound, IsTouchSound;
 	friend class Game;
 
 public:

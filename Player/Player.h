@@ -12,6 +12,7 @@ private:
 	bool GameOver;
 	std::string Name;
 	Brick NowBrick, NextBrick;
+	bool TouchedBottom;
 
 	bool isOverlap();
 	bool carryCommand(int Direction);
@@ -24,6 +25,7 @@ private:
 
 public:
 	bool IsGameOver();
+	bool IsTouchedBottom();
 	int getScore();
 	std::string getName();
 	Player(bool StartGame=0);
