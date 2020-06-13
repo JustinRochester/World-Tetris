@@ -241,7 +241,6 @@ void Player::setName(const std::string& Name_) {
 	return;
 }
 int Player::run(int Direction) {
-	TouchedBottom = 0;
 	if (GameOver)
 		return 0;
 	/*
@@ -278,7 +277,6 @@ int Player::run(int Direction) {
 	return CountDeleteLine;
 }
 int Player::addLine(int CountLine) {
-	TouchedBottom = 0;
 	static int Bas = (1 << RIGHT_LIM - LEFT_LIM + 1) - 2;
 	if (GameOver)
 		return 0;
@@ -326,5 +324,7 @@ std::string Player::getName() {
 	return Name;
 }
 bool Player::IsTouchedBottom() {
-	return TouchedBottom;
+	bool Res = TouchedBottom;
+	TouchedBottom = 0;
+	return Res;
 }
